@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ClassroomAI - Generate Lecture Video</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; background: #0f172a; color: #e2e8f0; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    label { display:block; margin: 8px 0 4px; }
+    input[type="text"], input[type="number"], select { width: 280px; padding: 8px; border-radius: 8px; border: 1px solid #334155; background:#0b1220; color:#e2e8f0 }
+    button { background:#2563eb; color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
+    .row { display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+    .muted { color:#94a3b8; font-size: 0.9em; }
+    video { width: 100%; max-width: 960px; border-radius: 12px; border: 1px solid #1f2937; }
+    pre { white-space: pre-wrap; background:#0b1220; padding:12px; border-radius:8px; border:1px solid #1f2937; }
+  </style>
+</head>
+<body>
+  <h1>ClassroomAI</h1>
+  <p class="muted">Upload your notes, then generate a narrated video lecture directly in the browser.</p>
+
+  <div class="card">
+    <h2>1) Upload Notes</h2>
+    <div class="row">
+      <input id="file" type="file" accept=".pdf,.doc,.docx,.txt,.md" />
+      <button id="btnUpload">Upload</button>
+    </div>
+    <div id="uploadStatus" class="muted"></div>
+  </div>
+
+  <div class="card">
+    <h2>2) Generate Video</h2>
+    <div class="row">
+      <label>Voice (edge-tts id, optional)</label>
+      <input id="voice" type="text" placeholder="en-US-AriaNeural" />
+      <label>FPS</label>
+      <input id="fps" type="number" value="24" />
+      <label>Width</label>
+      <input id="width" type="number" value="1280" />
+      <label>Height</label>
+      <input id="height" type="number" value="720" />
+      <label>Theme</label>
+      <select id="theme"><option value="dark" selected>dark</option><option value="light">light</option></select>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label><input id="useDid" type="checkbox"/> Use AI Avatar (D-ID)</label>
+      <label><input id="useDidScene" type="checkbox"/> Scene mode (avatar + slides)</label>
+      <input id="driverUrl" type="text" placeholder="Driver image URL (optional)" style="width:420px"/>
+      <input id="voiceId" type="text" placeholder="Voice ID (e.g., en-US-JennyNeural)"/>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="btnGenerate" disabled>Generate Video</button>
+      <span class="muted" id="genStatus"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3) Preview</h2>
+    <video id="player" controls></video>
+    <div id="links" class="muted"></div>
+  </div>
+
+  <div class="card">
+    <h2>Logs</h2>
+    <pre id="logs"></pre>
+  </div>
+
+  <script>
+    const log = (m) => { const el = document.getElementById('logs'); el.textContent += `\n${m}`; }
+    let documentId = null;
+
+    document.getElementById('btnUpload').onclick = async () => {
+      const file = document.getElementById('file').files[0];
+      if (!file) { alert('Choose a file first'); return; }
+      const fd = new FormData();
+      fd.append('file', file);
+      document.getElementById('uploadStatus').textContent = 'Uploading...';
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.message || 'Upload failed');
+        documentId = json.documentId;
+        document.getElementById('uploadStatus').textContent = `Uploaded: ${json.fileName} (id: ${documentId})`;
+        document.getElementById('btnGenerate').disabled = false;
+        log('Upload success: ' + JSON.stringify(json, null, 2));
+      } catch (e) {
+        document.getElementById('uploadStatus').textContent = 'Upload failed: ' + e.message;
+        log('Upload error: ' + e.message);
+      }
+    };
+
+    document.getElementById('btnGenerate').onclick = async () => {
+      if (!documentId) { alert('Upload first'); return; }
+      const opts = {
+        ttsProvider: 'edge',
+        theme: document.getElementById('theme').value,
+        fps: Number(document.getElementById('fps').value||24),
+        width: Number(document.getElementById('width').value||1280),
+        height: Number(document.getElementById('height').value||720),
+      };
+      if (document.getElementById('useDidScene').checked) {
+        opts.provider = 'did-scene';
+        const driverUrl = document.getElementById('driverUrl').value.trim();
+        const voiceId = document.getElementById('voiceId').value.trim();
+        if (driverUrl) opts.driverUrl = driverUrl;
+        if (voiceId) opts.voiceId = voiceId;
+      } else if (document.getElementById('useDid').checked) {
+        opts.provider = 'did';
+        const driverUrl = document.getElementById('driverUrl').value.trim();
+        const voiceId = document.getElementById('voiceId').value.trim();
+        if (driverUrl) opts.driverUrl = driverUrl;
+        if (voiceId) opts.voiceId = voiceId; // D-ID microsoft voice id
+      } else {
+        const voice = document.getElementById('voice').value.trim();
+        if (voice) opts.voice = voice;
+      }
+      document.getElementById('genStatus').textContent = 'Generating... this can take a minute';
+      try {
+        const res = await fetch('/api/video/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ documentId, options: opts })
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.message || 'Generation failed');
+        document.getElementById('genStatus').textContent = 'Done';
+        const v = document.getElementById('player');
+        v.src = json.videoUrl;
+        // Add captions track if available
+        if (json.srtUrl) {
+          const track = document.createElement('track');
+          track.kind = 'subtitles';
+          track.label = 'English';
+          track.srclang = 'en';
+          track.src = json.srtUrl;
+          v.appendChild(track);
+        }
+        document.getElementById('links').innerHTML = `Video: <a href="${json.videoUrl}" target="_blank">${json.videoUrl}</a><br/>SRT: <a href="${json.srtUrl}" target="_blank">${json.srtUrl}</a>`;
+        log('Generate success: ' + JSON.stringify(json, null, 2));
+        v.load();
+        v.play();
+      } catch (e) {
+        document.getElementById('genStatus').textContent = 'Failed: ' + e.message;
+        log('Generate error: ' + e.message);
+      }
+    };
+  </script>
+</body>
+</html>

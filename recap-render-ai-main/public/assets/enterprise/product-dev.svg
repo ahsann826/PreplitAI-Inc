@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" rx="24" fill="#0B0B0C"/>
+  <g filter="url(#shadow)">
+    <rect x="80" y="100" width="1040" height="320" rx="16" fill="#121214" stroke="#2A2A2D"/>
+    <g transform="translate(120,140)">
+      <rect x="0" y="0" width="320" height="200" rx="12" fill="#1E1E22"/>
+      <rect x="360" y="0" width="520" height="32" rx="8" fill="#1E1E22"/>
+      <rect x="360" y="48" width="520" height="18" rx="6" fill="#1E1E22"/>
+      <rect x="360" y="76" width="420" height="14" rx="6" fill="#1E1E22"/>
+      <rect x="360" y="110" width="280" height="38" rx="8" fill="#22C55E"/>
+    </g>
+  </g>
+  <g>
+    <text x="120" y="520" fill="#9CA3AF" font-family="Inter, system-ui, -apple-system" font-size="20" font-weight="600">Ship faster</text>
+    <text x="120" y="580" fill="#F9FAFB" font-family="Inter, system-ui, -apple-system" font-size="48" font-weight="800">Simplify your content development.</text>
+  </g>
+  <defs>
+    <filter id="shadow" x="60" y="80" width="1080" height="360" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+</svg>
