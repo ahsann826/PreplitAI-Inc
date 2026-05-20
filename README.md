@@ -1,5 +1,8 @@
 Converting boring notes into engaging lectures using the help of AI.
 
+<img width="1114" height="1412" alt="ChatGPT Image May 13, 2026, 11_19_07 AM" src="https://github.com/user-attachments/assets/e91430b8-2406-4eb3-9407-e2a106eb1cb3" />
+
+
 Tech stack: Vite.js frontend + Node/Express API + Python (MoviePy) generator.
 
 ## Make a video lecture from your notes
