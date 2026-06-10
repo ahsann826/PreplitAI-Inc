@@ -1,7 +1,7 @@
 Converting boring notes into engaging lectures using the help of AI.
 
-<img width="500" height="400" alt="Preplit AI Logo" src="https://github.com/user-attachments/assets/e91430b8-2406-4eb3-9407-e2a106eb1cb3" />
 
+<img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/274f897c-bf2e-42d1-9c1d-dafe01e28f02" />
 
 Tech stack: Vite.js frontend + Node/Express API + Python (MoviePy) generator.
 
