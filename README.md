@@ -1,5 +1,4 @@
-Converting boring notes into engaging lectures using the help of AI.
-
+# CONCEPT - PREPLIT AI
 
 <img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/274f897c-bf2e-42d1-9c1d-dafe01e28f02" />
 
