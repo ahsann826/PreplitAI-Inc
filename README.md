@@ -12,6 +12,14 @@
 ![Waitlist](https://img.shields.io/badge/join-waitlist-8b0000?style=flat-square)
 ![Powered by AI](https://img.shields.io/badge/powered%20by-AI-darkred?style=flat-square)
 
+Copyright (c) 2026 Preplit/CTO
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 **PreplitAI** is an AI-powered EdTech platform that converts static, text-based notes into fully produced video lectures — complete with narration, structured slides, and a shareable output. No recording. No editing. No technical skill required.
 
 [Join the Waitlist](#) · [Documentation](#) · [Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues)
@@ -252,13 +260,5 @@ Please follow [Conventional Commits](https://www.conventionalcommits.org/) for c
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
-
-<div align="center">
-<img width="1672" height="941" alt="ChatGPT Image Jun 10, 2026, 12_20_34 PM" src="https://github.com/user-attachments/assets/564b0130-0b39-40b0-9f9b-b9303eceb06b" />
-
-
-**If you find this project interesting, give it a star!**
-
-[Join the Waitlist](#) · [Follow Updates](#) · [Report an Issue](https://github.com/ahsann826/PreplitAI-Inc/issues)
 
 </div>
