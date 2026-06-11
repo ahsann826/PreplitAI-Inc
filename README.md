@@ -14,13 +14,13 @@
 
 **PreplitAI** is an AI-powered EdTech platform that converts static, text-based notes into fully produced video lectures — complete with narration, structured slides, and a shareable output. No recording. No editing. No technical skill required.
 
-[🎯 Join the Waitlist](#) · [📄 Documentation](#) · [🐛 Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [💡 Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues)
+[Join the Waitlist](#) · [Documentation](#) · [Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues)
 
 </div>
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 
 - [About the Project](#-about-the-project)
 - [How It Works](#-how-it-works)
@@ -37,7 +37,7 @@
 
 ---
 
-## 🎓 About the Project
+## About the Project
 
 There is a massive amount of written educational content in the world — lecture notes, study guides, textbook summaries, course outlines — that never gets converted into the format learners engage with most: **video**.
 
@@ -55,7 +55,7 @@ Most tools solve one piece of the puzzle — slide builders make visuals, TTS to
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 ```
 [ Your Text Notes ]
@@ -76,17 +76,17 @@ Most tools solve one piece of the puzzle — slide builders make visuals, TTS to
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 | Feature | Description |
 |---|---|
-| 📝 **Text-to-Video Conversion** | Converts any text notes into a complete video lecture automatically |
-| 🎙️ **AI Narration** | Natural-sounding AI voiceover — no recording needed |
-| 📊 **Auto-Generated Slides** | Content is intelligently structured into clean, visual slides |
-| ⚡ **Fast Turnaround** | Full video produced in under 5 minutes |
-| 🌐 **100% Web-Based** | No installs, no setup — works entirely in the browser |
-| 📤 **Easy Sharing** | Download or share your lecture with a single link |
-| 🎓 **Education-Aware AI** | The model understands educational structure, not just formatting |
+| **Text-to-Video Conversion** | Converts any text notes into a complete video lecture automatically |
+| **AI Narration** | Natural-sounding AI voiceover — no recording needed |
+| **Auto-Generated Slides** | Content is intelligently structured into clean, visual slides |
+| **Fast Turnaround** | Full video produced in under 5 minutes |
+| **100% Web-Based** | No installs, no setup — works entirely in the browser |
+| **Easy Sharing** | Download or share your lecture with a single link |
+| **Education-Aware AI** | The model understands educational structure, not just formatting |
 
 ---
 
@@ -106,7 +106,7 @@ Most tools solve one piece of the puzzle — slide builders make visuals, TTS to
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -148,7 +148,7 @@ DATABASE_URL=your_database_url
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 .
@@ -184,7 +184,7 @@ DATABASE_URL=your_database_url
 
 ---
 
-## 👥 Target Users
+## Target Users
 
 - **Students** — Turn lecture notes into revision videos instantly
 - **Educators & Teachers** — Create course content without video production skills
@@ -194,7 +194,7 @@ DATABASE_URL=your_database_url
 
 ---
 
-## ❓ FAQ
+## FAQ
 
 **What kind of notes can I upload?**
 Any text-based content — bullet points, paragraphs, outlines, or full summaries. The messier the better; our AI handles the structure.
@@ -216,7 +216,7 @@ Students, educators, course creators, and anyone who wants to turn written knowl
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! If you'd like to help build PreplitAI:
 
@@ -239,15 +239,15 @@ Please follow [Conventional Commits](https://www.conventionalcommits.org/) for c
 
 ---
 
-## 👨‍💻 Team
+## Team
 
 | Name | Role | GitHub |
 |---|---|---|
-| Ahsan | Founder & Lead Developer | [@ahsann826](https://github.com/ahsann826) |
+| Khan Ahsan | Founder & Lead Developer | [@ahsann826](https://github.com/ahsann826) |
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
@@ -257,7 +257,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 <img width="1672" height="941" alt="ChatGPT Image Jun 10, 2026, 12_20_34 PM" src="https://github.com/user-attachments/assets/564b0130-0b39-40b0-9f9b-b9303eceb06b" />
 
 
-⭐ **If you find this project interesting, give it a star!**
+**If you find this project interesting, give it a star!**
 
 [Join the Waitlist](#) · [Follow Updates](#) · [Report an Issue](https://github.com/ahsann826/PreplitAI-Inc/issues)
 
