@@ -1,10 +1,11 @@
 <div align="center">
 
-<img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/97c7f80f-edca-4ff4-95e6-7add48f664d3" />
-
 # PreplitAI, Inc.
 
 ### Turn your notes into video lectures — instantly.
+
+<img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/97c7f80f-edca-4ff4-95e6-7add48f664d3" />
+
 
 ![Status](https://img.shields.io/badge/status-pre--launch-8b0000?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-darkred?style=flat-square)
@@ -13,7 +14,7 @@
 
 **PreplitAI** is an AI-powered EdTech platform that converts static, text-based notes into fully produced video lectures — complete with narration, structured slides, and a shareable output. No recording. No editing. No technical skill required.
 
-[🎯 Join the Waitlist](#) · [📄 Documentation](#) · [🐛 Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [💡 Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues)
+[🎯 Join the Waitlist](#) · [📄 Documentation](#) · [🐛 Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [💡 Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues) ![License](https://img.shields.io/badge/license-Apache%202.0-8b0000?style=flat-square)
 
 </div>
 
