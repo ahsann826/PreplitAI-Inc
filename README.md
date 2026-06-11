@@ -246,12 +246,13 @@ Please follow [Conventional Commits](https://www.conventionalcommits.org/) for c
 | `chore/{description}` | Maintenance / tooling |
 
 ---
-
+https://github.com/ZainabAbbas540
 ## Team
 
 | Name | Role | GitHub |
 |---|---|---|
 | Khan Ahsan | Founder & Lead Developer | [@ahsann826](https://github.com/ahsann826) |
+| Zainab | Co-founder | [@ZainabAbbas540]((https://github.com/ZainabAbbas540)) |
 
 ---
 
