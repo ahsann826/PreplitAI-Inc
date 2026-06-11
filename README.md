@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" alt="PreplitAI Logo" width="120" />
+<img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/97c7f80f-edca-4ff4-95e6-7add48f664d3" />
 
 # PreplitAI, Inc.
 
@@ -253,8 +253,8 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 ---
 
 <div align="center">
+<img width="1672" height="941" alt="ChatGPT Image Jun 10, 2026, 12_20_34 PM" src="https://github.com/user-attachments/assets/564b0130-0b39-40b0-9f9b-b9303eceb06b" />
 
-Built with ❤️ for learners everywhere.
 
 ⭐ **If you find this project interesting, give it a star!**
 
