@@ -2,8 +2,6 @@
 
 # PreplitAI, Inc.
 
-### Turn your notes into video lectures — instantly. <br>
-<br>
 
 <img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/97c7f80f-edca-4ff4-95e6-7add48f664d3" />
 
