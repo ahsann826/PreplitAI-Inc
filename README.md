@@ -20,8 +20,6 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-**PreplitAI** is an AI-powered EdTech platform that converts static, text-based notes into fully produced video lectures — complete with narration, structured slides, and a shareable output. No recording. No editing. No technical skill required.
-
 [Join the Waitlist](#) · [Documentation](#) · [Report a Bug](https://github.com/ahsann826/PreplitAI-Inc/issues) · [Request a Feature](https://github.com/ahsann826/PreplitAI-Inc/issues)
 
 </div>
