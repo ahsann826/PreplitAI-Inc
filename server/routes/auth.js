@@ -3,9 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db/database');
 const authMiddleware = require('../middleware/auth');
+const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/constants');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // POST /api/auth/signup
 router.post('/signup', async (req, res) => {
@@ -50,7 +50,7 @@ router.post('/signup', async (req, res) => {
     const token = jwt.sign(
       { userId, email },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: JWT_EXPIRES_IN }
     );
 
     // Get user with credit balance
@@ -111,7 +111,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: JWT_EXPIRES_IN }
     );
 
     res.json({

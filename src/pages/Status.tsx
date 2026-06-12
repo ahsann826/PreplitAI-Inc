@@ -1,5 +1,5 @@
-import { Footer } from "@/components/Footer";
-import { SEOHead } from "@/components/SEOHead";
+import { Footer } from "@/components/layout/Footer";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const Status = () => (
   <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">

@@ -1,9 +1,9 @@
-import { Hero } from "@/components/Hero";
-import { Features } from "@/components/Features";
-import { HowItWorks } from "@/components/HowItWorks";
-import { UploadSection } from "@/components/UploadSection";
-import { Footer } from "@/components/Footer";
-import { SEOHead } from "@/components/SEOHead";
+import { Hero } from "@/components/home/Hero";
+import { Features } from "@/components/home/Features";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { UploadSection } from "@/components/upload/UploadSection";
+import { Footer } from "@/components/layout/Footer";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const Index = () => {
   const scrollToUpload = () => {

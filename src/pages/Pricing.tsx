@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronDown } from "lucide-react";
-import { Footer } from "@/components/Footer";
-import { SEOHead } from "@/components/SEOHead";
+import { Footer } from "@/components/layout/Footer";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const features = {
   free: [

@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { SEOHead } from "@/components/SEOHead";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const About = () => {
   const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";

@@ -1,71 +1,11 @@
-const API_BASE_URL = import.meta.env.PROD 
-  ? 'http://localhost:5000/api' 
-  : '/api'; // Use Vite proxy in development
-
-export interface UploadResponse {
-  success: boolean;
-  documentId: string;
-  fileName: string;
-  textPreview: string;
-  wordCount: number;
-  message: string;
-}
-
-export interface LectureResponse {
-  success: boolean;
-  lecture: {
-    documentId: string;
-    mode: string;
-    style: string;
-    script: string;
-    sceneBreakdown: string;
-    wordCount: number;
-    estimatedDuration: number;
-  };
-  message: string;
-  next?: string;
-}
-
-export interface VideoGenerationOptions {
-  provider?: 'did' | 'did-scene' | 'default';
-  // D-ID specific options
-  voiceId?: string;
-  driverUrl?: string;
-  ratio?: string;
-  // Default provider options
-  ttsProvider?: string;
-  theme?: string;
-  fps?: number;
-  width?: number;
-  height?: number;
-  voice?: string;
-  music?: string;
-  font?: string;
-  kenburns?: boolean;
-}
-
-export interface VideoResponse {
-  success: boolean;
-  videoPath: string;
-  srtPath: string;
-  videoUrl: string;
-  srtUrl: string;
-  message: string;
-}
-
-export interface VideoHistoryItem {
-  id: string;
-  filename: string;
-  videoUrl: string;
-  size: number;
-  createdAt: string;
-  modifiedAt: string;
-}
-
-export interface VideoHistoryResponse {
-  success: boolean;
-  videos: VideoHistoryItem[];
-}
+import { API_BASE_URL } from "@/constants/config";
+import {
+  UploadResponse,
+  LectureResponse,
+  VideoGenerationOptions,
+  VideoResponse,
+  VideoHistoryResponse,
+} from "@/types/api";
 
 export const api = {
   /**
@@ -157,3 +97,4 @@ export const api = {
     return response.json();
   },
 };
+

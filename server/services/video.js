@@ -23,7 +23,7 @@ async function generateVideoFromTextFile(textFilePath, opts = {}) {
   const outMp4 = path.join(__dirname, '..', 'outputs', 'videos', `${baseName}_${ts}.mp4`);
 
   const args = [
-    '-m', 'src.video_lecture.cli',
+    '-m', 'ml.cli',
     textFilePath,
     '--tts-provider', opts.ttsProvider || 'edge',
     '--theme', opts.theme || 'dark',

@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { API_BASE_URL, TOKEN_STORAGE_KEY } from '@/constants/config';
 
 interface User {
   id: number;
   email: string;
   name: string;
+  creditBalance?: number;
 }
 
 interface AuthContextType {
@@ -20,10 +22,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE_URL = import.meta.env.PROD 
-  ? 'http://localhost:5000/api' 
-  : '/api';
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -31,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Load token and user from localStorage on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
+    const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
     if (storedToken) {
       setToken(storedToken);
       fetchUser(storedToken);
@@ -39,6 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     }
   }, []);
+
 
   const fetchUser = async (authToken: string) => {
     try {
@@ -53,12 +52,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(data.user);
       } else {
         // Token is invalid
-        localStorage.removeItem('token');
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
         setToken(null);
       }
     } catch (error) {
       console.error('Error fetching user:', error);
-      localStorage.removeItem('token');
+      localStorage.removeItem(TOKEN_STORAGE_KEY);
       setToken(null);
     } finally {
       setLoading(false);
@@ -81,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(data.message || 'Login failed');
       }
 
-      localStorage.setItem('token', data.token);
+      localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
       setToken(data.token);
       setUser(data.user);
       toast.success('Login successful!');
@@ -108,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(data.message || 'Signup failed');
       }
 
-      localStorage.setItem('token', data.token);
+      localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
       setToken(data.token);
       setUser(data.user);
       toast.success('Account created successfully!');
@@ -120,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
     setUser(null);
     toast.success('Logged out successfully');

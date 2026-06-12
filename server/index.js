@@ -11,8 +11,8 @@ const path = require('path');
 const db = require('./db/database'); // Initialize database
 const compression = require('compression');
 
+const { PORT } = require('./config/constants');
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(compression());
@@ -49,7 +49,7 @@ app.use('/api/payments', paymentsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'ClassroomAI API is running' });
+  res.json({ status: 'OK', message: 'PreplitAI API is running' });
 });
 
 // Error handling middleware

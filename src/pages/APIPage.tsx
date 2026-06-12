@@ -1,6 +1,6 @@
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { SEOHead } from "@/components/SEOHead";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const APIPage = () => {
   const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";

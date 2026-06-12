@@ -16,7 +16,7 @@ router.get('/balance', async (req, res) => {
     res.json({
       success: true,
       balance,
-      userId: req.user.id
+      userId: req.userId
     });
   } catch (error) {
     console.error('Error fetching balance:', error);

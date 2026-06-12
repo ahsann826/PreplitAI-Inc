@@ -1,7 +1,7 @@
-import { Features as FeaturesGrid } from "@/components/Features";
-import { Footer } from "@/components/Footer";
+import { Features as FeaturesGrid } from "@/components/home/Features";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { SEOHead } from "@/components/SEOHead";
+import { SEOHead } from "@/components/seo/SEOHead";
 import { Sparkles, CheckCircle2, ArrowRight, Zap, Shield, Globe, Brain } from "lucide-react";
 
 const capabilities = [

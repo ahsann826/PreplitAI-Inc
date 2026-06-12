@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-
-const API_BASE_URL = import.meta.env.PROD ? 'http://localhost:5000/api' : '/api';
+import { API_BASE_URL } from "@/constants/config";
 
 type UserInfo = { id: number; email: string; name: string; created_at?: string };
 interface MeResponse {

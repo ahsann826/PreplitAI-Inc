@@ -1,4 +1,4 @@
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Calendar, BookOpen, Users, Video, Award, Sparkles, Heart } from "lucide-react";

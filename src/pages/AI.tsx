@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/Footer";
-import { SEOHead } from "@/components/SEOHead";
+import { Footer } from "@/components/layout/Footer";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const features = [
   {
