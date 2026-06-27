@@ -1,4 +1,5 @@
 const Groq = require('groq-sdk');
+const textFormatter = require('../utils/textFormatter');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const MODEL_CANDIDATES = [
@@ -47,7 +48,9 @@ class ScriptGenerator {
     const prompts = this.getPrompt(mode, style);
     try {
       const userMsg = `${prompts.user}\n\nNotes:\n${text}`;
-      return await generateChatWithFallback(prompts.system, userMsg);
+      const rawScript = await generateChatWithFallback(prompts.system, userMsg);
+      // Clean script to avoid TTS issues or slide rendering overflow
+      return textFormatter.stripMarkdown(rawScript);
     } catch (error) {
       throw new Error(`Script generation failed: ${error.message}`);
     }

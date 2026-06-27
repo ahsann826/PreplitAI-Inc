@@ -86,22 +86,46 @@ export const LectureModal = ({ isOpen, onClose, lecture }: LectureModalProps) =>
         throw new Error("Failed to get job ID from server");
       }
 
-      // 2. Poll for status
-      let isComplete = false;
-      while (!isComplete) {
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        const statusResult = await api.getJobStatus(queueResult.jobId);
-        
-        if (statusResult.status === 'completed') {
-          toast.success("Video generated successfully!");
-          // Use the Cloudinary URL directly (no need to prepend localhost)
-          setVideoUrl(statusResult.videoUrl);
-          isComplete = true;
-          loadVideoHistory();
-        } else if (statusResult.status === 'failed') {
-          throw new Error(statusResult.error || "Video generation failed");
+      // 2. Listen to SSE for status
+      const token = localStorage.getItem('token') || '';
+      // EventSource doesn't support custom headers easily natively, so we pass token in URL or rely on cookies.
+      // We will assume the backend doesn't strictly need auth for this specific GET if it's too hard to pass,
+      // but since it's authMiddleware, let's append it as a query param and backend handles it, OR
+      // we use fetch to consume the SSE stream (more robust for Auth headers).
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/video/status/${queueResult.jobId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-        // If pending or processing, loop continues
+      });
+      
+      if (!response.ok || !response.body) throw new Error("Failed to connect to status stream");
+      
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      
+      while (!done) {
+        const { value, done: streamDone } = await reader.read();
+        done = streamDone;
+        if (value) {
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = JSON.parse(line.replace('data: ', ''));
+              
+              if (data.status === 'completed') {
+                toast.success("Video generated successfully!");
+                setVideoUrl(data.videoUrl);
+                done = true;
+                loadVideoHistory();
+              } else if (data.status === 'failed') {
+                throw new Error(data.error || "Video generation failed");
+              }
+            }
+          }
+        }
       }
     } catch (error) {
       console.error("Video generation error:", error);
