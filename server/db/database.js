@@ -137,6 +137,20 @@ db.exec(`
   )
 `);
 
+// Create jobs table for background queue
+db.exec(`
+  CREATE TABLE IF NOT EXISTS jobs (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    data TEXT,
+    status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'processing', 'completed', 'failed')),
+    result TEXT,
+    error TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
 console.log('Database initialized successfully');
 
 // Export db first to avoid circular dependency issues

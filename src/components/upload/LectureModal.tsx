@@ -72,22 +72,37 @@ export const LectureModal = ({ isOpen, onClose, lecture }: LectureModalProps) =>
 
     setIsGeneratingVideo(true);
     try {
-      toast.info("Generating AI avatar video with D-ID... This may take a few minutes.");
+      toast.info("Queueing AI avatar video generation... This may take a few minutes.");
 
-      const result = await api.generateVideo(lecture.script, {
+      // 1. Enqueue job
+      const queueResult = await api.generateVideo(lecture.script, {
         provider: "did",
         voiceId: voiceId,
         driverUrl: avatarUrl,
         ratio: "16:9",
       });
 
-      toast.success("Video generated successfully!");
+      if (!queueResult.jobId) {
+        throw new Error("Failed to get job ID from server");
+      }
 
-      const baseUrl = import.meta.env.PROD ? "http://localhost:5000" : "";
-      const fullVideoUrl = `${baseUrl}${result.videoUrl}`;
-      setVideoUrl(fullVideoUrl);
-
-      loadVideoHistory();
+      // 2. Poll for status
+      let isComplete = false;
+      while (!isComplete) {
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        const statusResult = await api.getJobStatus(queueResult.jobId);
+        
+        if (statusResult.status === 'completed') {
+          toast.success("Video generated successfully!");
+          // Use the Cloudinary URL directly (no need to prepend localhost)
+          setVideoUrl(statusResult.videoUrl);
+          isComplete = true;
+          loadVideoHistory();
+        } else if (statusResult.status === 'failed') {
+          throw new Error(statusResult.error || "Video generation failed");
+        }
+        // If pending or processing, loop continues
+      }
     } catch (error) {
       console.error("Video generation error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to generate video");
