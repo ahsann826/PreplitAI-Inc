@@ -5,7 +5,11 @@ import {
   VideoGenerationOptions,
   VideoResponse,
   VideoHistoryResponse,
+  Transaction,
+  TransactionsResponse,
 } from "@/types/api";
+
+export type { Transaction };
 
 export const api = {
   /**
@@ -76,6 +80,20 @@ export const api = {
   },
 
   /**
+   * Get job status
+   */
+  async getJobStatus(jobId: string): Promise<{ success: boolean; status: string; videoUrl?: string; error?: string }> {
+    const response = await fetch(`${API_BASE_URL}/video/status/${jobId}`);
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to fetch job status');
+    }
+    
+    return response.json();
+  },
+
+  /**
    * Get video generation history
    */
   async getVideoHistory(): Promise<VideoHistoryResponse> {
@@ -94,6 +112,24 @@ export const api = {
    */
   async healthCheck(): Promise<{ status: string; message: string }> {
     const response = await fetch(`${API_BASE_URL}/health`);
+    return response.json();
+  },
+
+  /**
+   * Get transactions
+   */
+  async getTransactions(limit = 100, offset = 0): Promise<TransactionsResponse> {
+    const response = await fetch(`${API_BASE_URL}/payments/history?limit=${limit}&offset=${offset}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to fetch transactions');
+    }
+    
     return response.json();
   },
 };

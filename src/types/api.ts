@@ -47,11 +47,12 @@ export interface VideoGenerationOptions {
 
 export interface VideoResponse {
   success: boolean;
-  videoPath: string;
-  srtPath: string;
-  videoUrl: string;
-  srtUrl: string;
-  message: string;
+  jobId?: string;
+  videoPath?: string;
+  srtPath?: string;
+  videoUrl?: string;
+  srtUrl?: string;
+  message?: string;
 }
 
 export interface VideoHistoryItem {
@@ -82,4 +83,18 @@ export interface LectureData {
   sceneBreakdown: string;
   wordCount: number;
   estimatedDuration: number;
+}
+
+export interface Transaction {
+  id: string;
+  type: string;
+  amount: number;
+  balance_after: number;
+  description: string;
+  created_at: string;
+}
+
+export interface TransactionsResponse {
+  success: boolean;
+  transactions: Transaction[];
 }
