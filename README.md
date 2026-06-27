@@ -91,7 +91,7 @@ Most tools solve one piece of the puzzle — slide builders make visuals, TTS to
 | **Backend** | Node.js, Express |
 | **AI / NLP** | Large Language Models for script generation & content structuring |
 | **Text-to-Speech** | AI voice synthesis for natural narration |
-| **Video Rendering** | Automated pipeline combining slides, audio, and timing |
+| **Video Rendering** | D-ID pipeline combining slides, audio, and timing |
 | **Database** | PostgreSQL |
 | **Cloud** | AWS / Vercel |
 
