@@ -1,91 +1,113 @@
-import { Upload, Brain, Video, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const steps = [
   {
-    number: 1,
-    title: "Upload Your Notes",
-    description:
-      "Simply upload your lecture notes, PDFs, or any study material. Our platform accepts all common document formats.",
-    icon: Upload,
+    number: "01",
+    label: "Upload",
+    headline: "Drop your notes.\nWe handle the rest.",
+    image: "/step1-upload.png",
+    alt: "File upload interface",
+    accent: "bg-red-50",
   },
   {
-    number: 2,
-    title: "AI Processing",
-    description:
-      "Our advanced AI analyzes your content, extracts key concepts, and structures everything into a comprehensive lecture format.",
-    icon: Brain,
+    number: "02",
+    label: "AI Processing",
+    headline: "AI reads, understands, and structures your content.",
+    image: "/step2-ai.png",
+    alt: "AI processing interface",
+    accent: "bg-orange-50",
   },
   {
-    number: 3,
-    title: "Watch & Learn",
-    description:
-      "Enjoy a fully generated video lecture complete with AI narration, visuals, and structured explanations tailored to your material.",
-    icon: Video,
+    number: "03",
+    label: "Watch & Learn",
+    headline: "Your personal lecture is ready to play.",
+    image: "/step3-video.png",
+    alt: "Video lecture player",
+    accent: "bg-rose-50",
   },
 ];
 
-export default function HowItWorks() {
+const HowItWorks = () => {
   return (
-    <section className="bg-[#faf9f7] dark:bg-[#111] py-28 px-6">
+    <section className="py-24 px-6 bg-white dark:bg-[#0a0a0a]">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
-            How It Works
+
+        {/* Header — minimal */}
+        <div className="mb-14">
+          <p className="text-[13px] font-semibold uppercase tracking-widest text-red-600 mb-3">How it works</p>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black dark:text-white max-w-lg leading-tight">
+            From notes to lecture in three steps.
           </h2>
-          <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
-            Three simple steps to transform your notes into lectures
-          </p>
         </div>
 
-        {/* Steps */}
-        <div className="flex flex-col md:flex-row items-center md:items-stretch justify-center gap-6 md:gap-0">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.number}
-                className="flex flex-col md:flex-row items-center"
-              >
-                {/* Card */}
-                <div className="w-full max-w-sm bg-white dark:bg-white/5 border border-gray-200/60 dark:border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                  {/* Step badge */}
-                  <div className="flex justify-center mb-5">
-                    <span
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold text-white"
-                      style={{ backgroundColor: "hsl(350,89%,45%)" }}
-                    >
-                      {step.number}
-                    </span>
-                  </div>
+        {/* Bento Grid — Notion style */}
+        <div className="grid md:grid-cols-2 gap-5">
 
-                  {/* Icon */}
-                  <div className="flex justify-center mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-red-600 dark:text-red-400" />
-                    </div>
-                  </div>
+          {/* Card 1 — Large spanning card */}
+          <div className={`relative rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
+            <div className="p-8 pb-0">
+              <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
+                {steps[0].label}
+              </span>
+              <h3 className="text-2xl font-bold tracking-tight text-black dark:text-white leading-snug mb-6 whitespace-pre-line">
+                {steps[0].headline}
+              </h3>
+            </div>
+            <div className="px-8 pb-0">
+              <img
+                src={steps[0].image}
+                alt={steps[0].alt}
+                className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-cover"
+              />
+            </div>
+          </div>
 
-                  {/* Text */}
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
+          {/* Right column — stacked */}
+          <div className="flex flex-col gap-5">
 
-                {/* Arrow between cards */}
-                {index < steps.length - 1 && (
-                  <div className="hidden md:flex items-center justify-center px-4">
-                    <ChevronRight className="w-5 h-5 text-gray-300 dark:text-gray-600" />
-                  </div>
-                )}
+            {/* Card 2 */}
+            <div className={`relative rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[1].accent} dark:bg-white/5 group cursor-pointer flex-1`}>
+              <div className="p-8 pb-0">
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
+                  {steps[1].label}
+                </span>
+                <h3 className="text-xl font-bold tracking-tight text-black dark:text-white leading-snug mb-5">
+                  {steps[1].headline}
+                </h3>
               </div>
-            );
-          })}
+              <div className="px-8">
+                <img
+                  src={steps[1].image}
+                  alt={steps[1].alt}
+                  className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className={`relative rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[2].accent} dark:bg-white/5 group cursor-pointer flex-1`}>
+              <div className="p-8 pb-0">
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
+                  {steps[2].label}
+                </span>
+                <h3 className="text-xl font-bold tracking-tight text-black dark:text-white leading-snug mb-5">
+                  {steps[2].headline}
+                </h3>
+              </div>
+              <div className="px-8">
+                <img
+                  src={steps[2].image}
+                  alt={steps[2].alt}
+                  className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-cover"
+                />
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
   );
-}
+};
+
+export default HowItWorks;
