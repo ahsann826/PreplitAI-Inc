@@ -69,7 +69,7 @@ const Index = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
             Start creating lectures
             <br />
-            <span className="bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">in minutes, not hours.</span>
+            <span className="text-[#c84040]">in minutes, not hours.</span>
           </h2>
           <p className="text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
             Join thousands of students and educators who use PreplitAI to transform their learning experience.

@@ -63,33 +63,39 @@ export const TopNav = () => {
               {/* Explore mega menu */}
               <NavigationMenuItem>
                 <Trigger label="Explore" />
-                <NavigationMenuContent className="rounded-md border-0 ring-0 shadow-xl p-8 md:w-[1000px] bg-white dark:bg-gray-900">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <NavigationMenuContent className="rounded-xl border border-white/20 dark:border-white/10 shadow-2xl p-6 md:w-[520px] bg-white/70 dark:bg-black/60 backdrop-blur-xl">
+                  <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-500 mb-4">Learn</p>
-                      <ul className="space-y-4">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-3 mb-2">Learn</p>
+                      <ul className="space-y-0.5">
                         <li>
-                          <a href="/about" className="block rounded-lg p-2 -mx-2 transition hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white">
-                            <div className="text-[22px] leading-7 font-semibold text-black dark:text-white">Our Story</div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Read about our mission</p>
+                          <a href="/about" className="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition hover:bg-black/5 dark:hover:bg-white/8 focus-visible:outline-none">
+                            <span className="text-[13.5px] font-semibold text-black dark:text-white leading-snug">Our Story</span>
+                            <span className="text-[12px] text-gray-500 dark:text-gray-400">Read about our mission</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/about#team" className="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition hover:bg-black/5 dark:hover:bg-white/8 focus-visible:outline-none">
+                            <span className="text-[13.5px] font-semibold text-black dark:text-white leading-snug">The Team</span>
+                            <span className="text-[12px] text-gray-500 dark:text-gray-400">Meet the people behind it</span>
                           </a>
                         </li>
                       </ul>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-500 mb-4">Build</p>
-                      <ul className="space-y-4">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-3 mb-2">Build</p>
+                      <ul className="space-y-0.5">
                         <li>
-                          <a href="/developers" className="block rounded-lg p-2 -mx-2 transition hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white">
-                            <div className="text-[22px] leading-7 font-semibold text-black dark:text-white">API</div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Build with PreplitAI</p>
+                          <a href="/developers" className="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition hover:bg-black/5 dark:hover:bg-white/8 focus-visible:outline-none">
+                            <span className="text-[13.5px] font-semibold text-black dark:text-white leading-snug">API</span>
+                            <span className="text-[12px] text-gray-500 dark:text-gray-400">Build with PreplitAI</span>
                           </a>
                         </li>
                         <li>
-<a href="/status" className="block rounded-lg p-2 -mx-2 transition hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white">
-                          <div className="text-[22px] leading-7 font-semibold text-black dark:text-white">Status</div>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">System health</p>
-                        </a>
+                          <a href="/status" className="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition hover:bg-black/5 dark:hover:bg-white/8 focus-visible:outline-none">
+                            <span className="text-[13.5px] font-semibold text-black dark:text-white leading-snug">Status</span>
+                            <span className="text-[12px] text-gray-500 dark:text-gray-400">System health &amp; uptime</span>
+                          </a>
                         </li>
                       </ul>
                     </div>

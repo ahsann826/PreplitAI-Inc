@@ -83,7 +83,7 @@ const FeaturesPage = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="inline-block text-sm font-medium tracking-wide uppercase text-indigo-600 mb-6"
+          className="inline-block text-sm font-medium tracking-wide uppercase text-[#630000] mb-6"
         >
           Features
         </motion.p>
@@ -95,7 +95,7 @@ const FeaturesPage = () => {
           className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-950 leading-[1.1] mb-6"
         >
           Powerful features for{" "}
-          <span className="bg-gradient-to-r from-indigo-600 to-indigo-400 bg-clip-text text-transparent">
+          <span className="text-[#630000]">
             modern learning
           </span>
         </motion.h1>
@@ -119,7 +119,7 @@ const FeaturesPage = () => {
           <Button
             asChild
             size="lg"
-            className="px-8 h-12 text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm"
+            className="px-8 h-12 text-sm font-semibold bg-[#630000] hover:bg-[#7a0000] text-white rounded-xl shadow-sm"
           >
             <a href="/pricing">
               Get started
@@ -168,10 +168,10 @@ const FeaturesPage = () => {
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
               variants={fadeUp}
-              className="group p-8 rounded-2xl border border-gray-200 bg-white hover:border-indigo-200 transition-colors duration-300"
+              className="group p-8 rounded-2xl border border-gray-200 bg-white hover:border-[#630000]/30 transition-colors duration-300"
             >
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-indigo-50 mb-6">
-                <cap.icon className="w-5 h-5 text-indigo-600" />
+              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#630000]/8 mb-6">
+                <cap.icon className="w-5 h-5 text-[#630000]" />
               </div>
 
               <h3 className="text-xl font-semibold text-gray-950 mb-4">
@@ -184,7 +184,7 @@ const FeaturesPage = () => {
                     key={j}
                     className="flex items-start gap-3 text-[15px] text-gray-500"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#630000] mt-0.5 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -213,7 +213,7 @@ const FeaturesPage = () => {
           <Button
             asChild
             size="lg"
-            className="px-8 h-12 text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm"
+            className="px-8 h-12 text-sm font-semibold bg-[#630000] hover:bg-[#7a0000] text-white rounded-xl shadow-sm"
           >
             <a href="/pricing">
               Start for free

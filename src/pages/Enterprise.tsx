@@ -98,15 +98,15 @@ const Enterprise = () => {
             variants={fadeUp}
             custom={0}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 mb-8">
-              <Building2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              <span className="text-[13px] font-medium text-indigo-700 dark:text-indigo-300">PreplitAI for Enterprise</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-8">
+              <Building2 className="w-4 h-4 text-[#630000] dark:text-[#ff9999]" />
+              <span className="text-[13px] font-medium text-[#630000] dark:text-[#ffaaaa]">PreplitAI for Enterprise</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 tracking-tight leading-[1.1]">
               Knowledge and work.
               <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-400">Connected.</span>
+              <span className="text-[#630000] dark:text-[#ff9999]">Connected.</span>
             </h1>
             
             <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
@@ -140,17 +140,17 @@ const Enterprise = () => {
             viewport={{ once: true, margin: "-50px" }}
             variants={fadeUp}
             custom={i}
-            className="p-8 md:p-10 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-colors group"
+            className="p-8 md:p-10 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black hover:border-[#630000]/30 dark:hover:border-[#630000]/40 transition-colors group"
           >
-            <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-              <block.icon className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <div className="w-12 h-12 rounded-xl bg-[#630000]/8 dark:bg-[#630000]/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <block.icon className="w-6 h-6 text-[#630000] dark:text-[#ff9999]" />
             </div>
             <h2 className="text-xl font-bold text-black dark:text-white tracking-tight mb-2">{block.title}</h2>
             <p className="text-[15px] text-gray-500 dark:text-gray-400 mb-6">{block.desc}</p>
             <ul className="space-y-3">
               {block.items.map((b) => (
                 <li key={b} className="flex items-start gap-3 text-[14px] text-gray-600 dark:text-gray-300">
-                  <CheckCircle2 className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#630000] dark:text-[#ff9999] mt-0.5 shrink-0" />
                   <span className="leading-relaxed">{b}</span>
                 </li>
               ))}
@@ -188,13 +188,13 @@ const Enterprise = () => {
                 </div>
               </div>
               <div className={idx % 2 === 1 ? 'md:order-1' : ''}>
-                <p className="text-[13px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-3">{s.eyebrow}</p>
+                <p className="text-[13px] font-semibold text-[#630000] dark:text-[#ff9999] uppercase tracking-wider mb-3">{s.eyebrow}</p>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black dark:text-white mb-4 leading-tight">{s.title}</h2>
                 <p className="text-[17px] text-gray-500 dark:text-gray-400 leading-relaxed mb-8">{s.copy}</p>
                 <ul className="space-y-4">
                   {s.bullets.map((b) => (
                     <li key={b} className="flex items-start gap-3 text-[15px] text-gray-600 dark:text-gray-300">
-                      <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-5 h-5 text-[#630000] dark:text-[#ff9999] shrink-0 mt-0.5" />
                       <span>{b}</span>
                     </li>
                   ))}
@@ -222,7 +222,7 @@ const Enterprise = () => {
               <Input 
                 type="email" 
                 placeholder="name@company.com" 
-                className="h-12 flex-1 rounded-lg bg-white dark:bg-black border-gray-200 dark:border-white/10 focus-visible:ring-indigo-500 text-[15px]"
+                className="h-12 flex-1 rounded-lg bg-white dark:bg-black border-gray-200 dark:border-white/10 focus-visible:ring-[#630000] text-[15px]"
                 required 
               />
               <Button type="submit" className="h-12 px-8 rounded-lg bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-medium transition-all hover:scale-[0.98]">

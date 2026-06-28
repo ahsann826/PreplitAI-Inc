@@ -23,12 +23,11 @@ const APIPage = () => {
         schemaMarkup={breadcrumb}
       />
       {/* Hero */}
-      <section className="relative max-w-7xl mx-auto px-6 pt-24 pb-16 overflow-hidden">
-        <div className="absolute top-0 -right-48 w-96 h-96 bg-cyan-500/10 dark:bg-cyan-500/5 rounded-full blur-3xl" />
+      <section className="relative max-w-7xl mx-auto px-6 pt-24 pb-16">
         <div className="relative z-10">
-          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-4">Developers</p>
+          <p className="text-sm font-semibold text-[#630000] dark:text-[#ff9999] mb-4">Developers</p>
           <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 leading-tight">
-            PreplitAI <span className="text-red-600 dark:text-red-500">API</span>
+            PreplitAI <span className="text-[#630000] dark:text-[#ff9999]">API</span>
           </h1>
           <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed mb-10">
             Build AI lecture workflows, generate videos, and search knowledge from your apps.

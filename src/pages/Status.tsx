@@ -9,11 +9,10 @@ const Status = () => (
       canonical={`${(import.meta as any).env?.VITE_SITE_URL || 'https://yourdomain.com'}/status`}
       robots="noindex,follow"
     />
-    <section className="relative max-w-7xl mx-auto px-6 pt-24 pb-16 overflow-hidden">
-      <div className="absolute top-0 -left-48 w-96 h-96 bg-green-500/10 dark:bg-green-500/5 rounded-full blur-3xl" />
+    <section className="relative max-w-7xl mx-auto px-6 pt-24 pb-16">
       <div className="relative z-10">
         <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 leading-tight">
-          System <span className="text-red-600 dark:text-red-500">status</span>
+          System <span className="text-[#630000] dark:text-[#ff9999]">status</span>
         </h1>
         <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed">
           Realtime overview of uptime and incidents for PreplitAI services.

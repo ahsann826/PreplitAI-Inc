@@ -14,10 +14,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    /* Brand — Deep Red */
-    --primary: 350 89% 45%; /* Deep Red */
+    /* Brand — Deep Burgundy #630000 */
+    --primary: 0 100% 19%; /* #630000 */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 350 89% 70%;
+    --primary-glow: 0 100% 35%;
     
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 10%;
@@ -29,16 +29,16 @@
     --accent-foreground: 0 0% 10%;
     
     /* Extras */
-    --accent-summary: 350 89% 45%;
-    --accent-detailed: 350 79% 35%;
-    --accent-test: 350 69% 25%;
+    --accent-summary: 0 100% 19%;
+    --accent-detailed: 0 100% 14%;
+    --accent-test: 0 100% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 350 89% 45%;
+    --ring: 0 100% 19%;
 
     --radius: 0.5rem; /* modern slightly smaller radius */
   }
@@ -68,7 +68,7 @@
 
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 350 89% 45%;
+    --ring: 0 100% 19%;
   }
 }
 
@@ -122,11 +122,11 @@
   }
   
   .shadow-glow {
-    box-shadow: 0 0 40px rgba(99, 102, 241, 0.15), 0 0 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 40px rgba(99, 0, 0, 0.15), 0 0 20px rgba(0, 0, 0, 0.05);
   }
   
   .shadow-intense {
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 40px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 40px rgba(99, 0, 0, 0.1);
   }
   
   /* Premium Animations */
@@ -136,10 +136,10 @@
   
   @keyframes glow {
     from {
-      box-shadow: 0 0 40px rgba(220, 38, 38, 0.3), 0 0 20px rgba(15, 23, 42, 0.4);
+      box-shadow: 0 0 40px rgba(99, 0, 0, 0.3), 0 0 20px rgba(15, 23, 42, 0.4);
     }
     to {
-      box-shadow: 0 0 60px rgba(220, 38, 38, 0.5), 0 0 40px rgba(15, 23, 42, 0.5);
+      box-shadow: 0 0 60px rgba(99, 0, 0, 0.5), 0 0 40px rgba(15, 23, 42, 0.5);
     }
   }
   

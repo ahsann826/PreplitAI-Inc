@@ -105,7 +105,7 @@ const Pricing = () => {
                   : "text-gray-500 hover:text-black dark:hover:text-white"
               }`}
             >
-              Yearly <span className="px-1.5 py-0.5 rounded text-[10px] bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-400 font-bold uppercase tracking-wider">Save 20%</span>
+              Yearly <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#630000]/10 text-[#630000] dark:bg-[#630000]/30 dark:text-[#ffaaaa] font-bold uppercase tracking-wider">Save 20%</span>
             </button>
           </div>
         </motion.div>
@@ -126,7 +126,7 @@ const Pricing = () => {
             <div className="space-y-4 flex-1">
               {features.free.map((f) => (
                 <div key={f} className="flex gap-3 items-start text-sm text-gray-600 dark:text-gray-300">
-                  <Check className="w-5 h-5 text-indigo-500 shrink-0" />
+                  <Check className="w-5 h-5 text-[#630000] shrink-0" />
                   <span>{f}</span>
                 </div>
               ))}
@@ -146,7 +146,7 @@ const Pricing = () => {
               <p className="text-[13px] font-semibold text-black dark:text-white">Everything in Free, plus:</p>
               {features.plus.map((f) => (
                 <div key={f} className="flex gap-3 items-start text-sm text-gray-600 dark:text-gray-300">
-                  <Check className="w-5 h-5 text-indigo-500 shrink-0" />
+                  <Check className="w-5 h-5 text-[#630000] shrink-0" />
                   <span>{f}</span>
                 </div>
               ))}
@@ -154,8 +154,8 @@ const Pricing = () => {
           </motion.div>
 
           {/* Business (Popular) */}
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3} className="relative p-8 rounded-3xl border-2 border-indigo-600 dark:border-indigo-500 bg-white dark:bg-black flex flex-col shadow-xl shadow-indigo-600/5 dark:shadow-none">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-indigo-600 dark:bg-indigo-500 text-white text-xs font-bold uppercase tracking-wider rounded-full">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3} className="relative p-8 rounded-3xl border-2 border-[#630000] bg-white dark:bg-black flex flex-col shadow-xl shadow-[#630000]/10 dark:shadow-none">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#630000] text-white text-xs font-bold uppercase tracking-wider rounded-full">
               Most Popular
             </div>
             <h3 className="text-xl font-bold text-black dark:text-white mb-2">Business</h3>
@@ -164,15 +164,15 @@ const Pricing = () => {
               <span className="text-4xl font-bold tracking-tight text-black dark:text-white">₩{billingPeriod === 'yearly' ? '25,000' : '30,000'}</span>
               <span className="text-sm text-gray-500 dark:text-gray-400"> /mo</span>
             </div>
-            <Button className="w-full mb-8 h-11 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white transition-all hover:scale-[0.98]">Upgrade to Business</Button>
+            <Button className="w-full mb-8 h-11 rounded-xl bg-[#630000] hover:bg-[#7a0000] text-white transition-all hover:scale-[0.98]">Upgrade to Business</Button>
             <div className="space-y-4 flex-1">
               <p className="text-[13px] font-semibold text-black dark:text-white">Everything in Plus, plus:</p>
               {features.business.map((f) => (
                 <div key={f} className="flex gap-3 items-start text-sm text-gray-600 dark:text-gray-300">
-                  <Check className="w-5 h-5 text-indigo-500 shrink-0" />
+                  <Check className="w-5 h-5 text-[#630000] shrink-0" />
                   <span className="flex items-center gap-2 flex-wrap">
                     {f.replace(" Beta", "")}
-                    {f.includes("Beta") && <span className="px-1.5 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 font-bold uppercase">Beta</span>}
+                    {f.includes("Beta") && <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#630000]/10 text-[#630000] dark:bg-[#630000]/30 dark:text-[#ffaaaa] font-bold uppercase">Beta</span>}
                   </span>
                 </div>
               ))}
@@ -191,7 +191,7 @@ const Pricing = () => {
               <p className="text-[13px] font-semibold text-black dark:text-white">Everything in Business, plus:</p>
               {features.enterprise.map((f) => (
                 <div key={f} className="flex gap-3 items-start text-sm text-gray-600 dark:text-gray-300">
-                  <Check className="w-5 h-5 text-indigo-500 shrink-0" />
+                  <Check className="w-5 h-5 text-[#630000] shrink-0" />
                   <span>{f}</span>
                 </div>
               ))}
