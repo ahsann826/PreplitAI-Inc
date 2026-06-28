@@ -122,14 +122,6 @@ export const UploadSection = () => {
                 }`}
                 onClick={() => setSelectedMode(mode.id)}
               >
-                <mode.icon
-                  className={`h-5 w-5 mb-3 ${
-                    selectedMode === mode.id
-                      ? "text-red-600 dark:text-red-500"
-                      : "text-gray-500 dark:text-gray-400"
-                  }`}
-                  strokeWidth={2}
-                />
                 <h4 className="text-[14px] font-semibold mb-1 text-black dark:text-white">
                   {mode.name}
                 </h4>
