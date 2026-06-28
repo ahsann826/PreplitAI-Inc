@@ -19,20 +19,12 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center bg-white dark:bg-[#0a0a0a] overflow-hidden">
-      {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-red-50/40 via-transparent to-transparent dark:from-red-950/20 dark:via-transparent pointer-events-none" />
 
       <div className="relative z-10 w-full px-6 pt-20 pb-8">
         {/* Main Content Grid */}
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Text Content */}
           <div className="text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 mb-8">
-              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-[13px] font-medium text-red-700 dark:text-red-300">Now in public beta</span>
-            </div>
-
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
               <span className="text-black dark:text-white">We're building the{" "}</span>
