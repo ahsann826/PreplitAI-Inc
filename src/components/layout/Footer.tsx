@@ -35,7 +35,6 @@ export const Footer = () => (
             <li><a href="/features" className="text-sm text-gray-500 hover:text-white transition-colors">Features</a></li>
             <li><a href="/pricing" className="text-sm text-gray-500 hover:text-white transition-colors">Pricing</a></li>
             <li><a href="/enterprise" className="text-sm text-gray-500 hover:text-white transition-colors">Enterprise</a></li>
-            <li><a href="/ai" className="text-sm text-gray-500 hover:text-white transition-colors">AI Workspace</a></li>
             <li><a href="/developers" className="text-sm text-gray-500 hover:text-white transition-colors">API</a></li>
           </ul>
         </div>
@@ -54,7 +53,6 @@ export const Footer = () => (
         <div>
           <h4 className="text-[13px] font-semibold text-white uppercase tracking-wider mb-4">Resources</h4>
           <ul className="space-y-3">
-            <li><a href="/community" className="text-sm text-gray-500 hover:text-white transition-colors">Community</a></li>
             <li><a href="/demo" className="text-sm text-gray-500 hover:text-white transition-colors">Request Demo</a></li>
           </ul>
         </div>

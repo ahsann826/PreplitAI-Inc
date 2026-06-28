@@ -11,10 +11,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Pricing from "./pages/Pricing";
 import Enterprise from "./pages/Enterprise";
-import AI from "./pages/AI";
 import FeaturesPage from "./pages/FeaturesPage";
 import RequestDemo from "./pages/RequestDemo";
-import Community from "./pages/Community";
 import StatusPage from "./pages/Status";
 import APIPage from "./pages/APIPage";
 import About from "./pages/About";
@@ -39,10 +37,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/enterprise" element={<Enterprise />} />
-            <Route path="/ai" element={<AI />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/demo" element={<RequestDemo />} />
-            <Route path="/community" element={<Community />} />
             <Route path="/status" element={<StatusPage />} />
             <Route path="/developers" element={<APIPage />} />
             <Route path="/about" element={<About />} />

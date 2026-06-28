@@ -51,9 +51,6 @@ export const TopNav = () => {
                 <a href="/features" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Features</a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/ai" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">AI</a>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
                 <a href="/enterprise" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Enterprise</a>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -72,10 +69,10 @@ export const TopNav = () => {
                       <p className="text-sm font-medium text-gray-500 mb-4">Learn</p>
                       <ul className="space-y-4">
                         <li>
-<a href="/community" className="block rounded-lg p-2 -mx-2 transition hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white">
-                          <div className="text-[22px] leading-7 font-semibold text-black dark:text-white">Community</div>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">Join events & groups</p>
-                        </a>
+                          <a href="/about" className="block rounded-lg p-2 -mx-2 transition hover:bg-black/5 dark:hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white">
+                            <div className="text-[22px] leading-7 font-semibold text-black dark:text-white">Our Story</div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Read about our mission</p>
+                          </a>
                         </li>
                       </ul>
                     </div>
