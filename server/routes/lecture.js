@@ -65,9 +65,19 @@ router.post('/generate', async (req, res) => {
     console.log('Generating lecture script...');
     const script = await scriptGenerator.generateScript(text, mode, style);
 
-    // Generate scene breakdown
-    console.log('Generating scene breakdown...');
-    const sceneBreakdown = await scriptGenerator.generateSceneBreakdown(script);
+    // Scene breakdown is now replaced by structured scenes
+    const sceneBreakdown = null;
+
+    // Generate structured scenes
+    console.log('Generating structured scenes...');
+    let scenes = null;
+    let warning = undefined;
+    try {
+      scenes = await scriptGenerator.generateStructuredScenes(script, mode, style);
+    } catch (e) {
+      console.warn('Structured scene generation failed:', e.message);
+      warning = `Structured scene generation failed: ${e.message}`;
+    }
 
     res.json({
       success: true,
@@ -77,10 +87,12 @@ router.post('/generate', async (req, res) => {
         style,
         script,
         sceneBreakdown,
+        scenes,
         wordCount: script.split(' ').length,
         estimatedDuration: Math.ceil(script.split(' ').length / 150) // ~150 words per minute
       },
       message: 'Lecture script generated successfully',
+      warning,
       next: 'Video generation will be added in the next phase'
     });
 

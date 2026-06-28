@@ -41,11 +41,12 @@ class LectureMaker:
         fps: int = 30,
         crossfade: float = 0.3,
         keep_temp: bool = False,
+        visual_data_list: Optional[List[dict]] = None,
     ) -> Tuple[str, Optional[str]]:
         tmp_dir = tempfile.mkdtemp(prefix="lecture_")
         try:
             # 1) Render slides to PNGs
-            slides = render_slides(sections, size=self.size, theme=self.theme, font_path=self.font_path)
+            slides = render_slides(sections, size=self.size, theme=self.theme, font_path=self.font_path, visual_data_list=visual_data_list)
             slide_paths: List[str] = []
             for i, img in enumerate(slides):
                 p = os.path.join(tmp_dir, f"slide_{i:03d}.png")
@@ -53,12 +54,21 @@ class LectureMaker:
                 slide_paths.append(p)
 
             # 2) TTS per section -> wav
-            audio_paths: List[str] = []
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+            
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                futures = {
+                    executor.submit(self.tts.synthesize_to_file, 
+                                   f"{sec.title}. {sec.body}" if sec.body else sec.title): i 
+                    for i, sec in enumerate(sections)
+                }
+                audio_paths = [None] * len(sections)
+                for future in as_completed(futures):
+                    i = futures[future]
+                    audio_paths[i] = future.result()
+
             durations: List[float] = []
-            for i, sec in enumerate(sections):
-                text = f"{sec.title}. {sec.body}" if sec.body else sec.title
-                audio_file = self.tts.synthesize_to_file(text)
-                audio_paths.append(audio_file)
+            for audio_file in audio_paths:
                 with AudioFileClip(audio_file) as a:
                     durations.append(a.duration)
 

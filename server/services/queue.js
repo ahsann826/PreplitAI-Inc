@@ -118,7 +118,25 @@ class QueueService extends EventEmitter {
         await fs.writeFile(tempTxt, script);
         filesToCleanup.push(tempTxt);
         
-        const { outMp4, outSrt } = await videoService.generateVideoFromTextFile(tempTxt, options);
+        const scriptGenerator = require('./scriptGenerator');
+        
+        let outMp4, outSrt;
+        try {
+          const scenesArray = await scriptGenerator.generateStructuredScenes(script, options.mode, options.style);
+          const scenesJsonPath = path.join(outDir, `temp_scenes_${job.id}.json`);
+          await fs.writeFile(scenesJsonPath, JSON.stringify(scenesArray));
+          filesToCleanup.push(scenesJsonPath);
+          
+          const result = await videoService.generateVideoFromScenes(scenesJsonPath, options);
+          outMp4 = result.outMp4;
+          outSrt = result.outSrt;
+        } catch (sceneErr) {
+          console.warn(`[Queue] generateStructuredScenes failed, falling back to text-only video:`, sceneErr.message);
+          const result = await videoService.generateVideoFromTextFile(tempTxt, options);
+          outMp4 = result.outMp4;
+          outSrt = result.outSrt;
+        }
+        
         localFilePath = outMp4;
         filesToCleanup.push(outMp4);
         if (outSrt) filesToCleanup.push(outSrt);

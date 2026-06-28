@@ -87,24 +87,66 @@ class ScriptGenerator {
   }
 
   /**
-   * Generate scene breakdown for video production
+   * Generate structured scenes for video production
    */
-  async generateSceneBreakdown(script) {
+  async generateStructuredScenes(text, mode, style) {
     try {
-      const prompt = `You are a video production assistant. Break down lecture scripts into scenes with timing and visual descriptions.
+      const prompt = `You are an expert educational content designer. You output only valid JSON arrays with no markdown formatting, no backticks, no explanation. Your visual designs are clear, educational, and appropriate for the content type.
 
-Break this lecture script into scenes for video production. For each scene, provide:
-1. Scene number
-2. Duration (in seconds)
-3. Narration text
-4. Visual description
+Based on the following lecture script, break it down into scenes. For each scene, you must provide a valid JSON object matching this exact schema in an array:
+{
+  "scene_number": 1,
+  "title": "string — short scene heading",
+  "narration": "string — full spoken narration for this scene, 2-4 sentences",
+  "scene_type": "one of: definition | flowchart | timeline | comparison | diagram | bar_chart | bullet_points",
+  "visual": {
+    "type": "matches scene_type exactly",
+    "data": {} // see below
+  }
+}
+
+Visual data shapes by type:
+- definition: { "term": "string", "explanation": "string", "example": "string or null" }
+- flowchart: { "steps": ["step1", "step2", "step3", ...] }
+- timeline: { "events": [{"year": "string", "label": "string"}, ...] }
+- comparison: { "left_label": "string", "right_label": "string", "left_points": ["string", ...], "right_points": ["string", ...] }
+- diagram: { "title": "string", "parts": [{"label": "string", "description": "string"}, ...] }
+- bar_chart: { "title": "string", "bars": [{"label": "string", "value": 100}, ...] }
+- bullet_points: { "heading": "string", "points": ["string", ...] }
+
+Output ONLY the JSON array. Do NOT wrap it in \`\`\`json or \`\`\`.
 
 Script:
-${script}`;
+${text}`;
 
-      return await generateTextWithFallback(prompt);
+      let rawResponse = await generateTextWithFallback(prompt);
+      
+      // Strip markdown wrappers if the model still includes them
+      rawResponse = rawResponse.trim();
+      if (rawResponse.startsWith('\`\`\`json')) {
+        rawResponse = rawResponse.substring(7);
+      } else if (rawResponse.startsWith('\`\`\`')) {
+        rawResponse = rawResponse.substring(3);
+      }
+      if (rawResponse.endsWith('\`\`\`')) {
+        rawResponse = rawResponse.substring(0, rawResponse.length - 3);
+      }
+      rawResponse = rawResponse.trim();
+
+      let parsed;
+      try {
+        parsed = JSON.parse(rawResponse);
+      } catch (e) {
+        throw new Error("Scene JSON parse failed");
+      }
+
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        throw new Error("Scene JSON parse failed: Result is not a non-empty array");
+      }
+
+      return parsed;
     } catch (error) {
-      throw new Error(`Scene breakdown generation failed: ${error.message}`);
+      throw new Error(`Structured scene generation failed: ${error.message}`);
     }
   }
 }

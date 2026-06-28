@@ -25,12 +25,26 @@ def main():
     p.add_argument("--kenburns", action="store_true", help="Enable slow zoom effect (slower rendering)")
     p.add_argument("--keep-temp", action="store_true", help="Keep temp assets for debugging")
 
+    p.add_argument("--scenes-json", help="Path to JSON file with structured scenes array")
+
     args = p.parse_args()
 
-    with open(args.input, "r", encoding="utf-8") as f:
-        text = f.read()
+    visual_data_list = None
+    if args.scenes_json:
+        import json
+        from .slides import Section
+        with open(args.scenes_json, "r", encoding="utf-8") as f:
+            scenes = json.load(f)
+        sections = []
+        visual_data_list = []
+        for s in scenes:
+            sections.append(Section(title=s.get("title", ""), body=s.get("narration", "")))
+            visual_data_list.append(s.get("visual", None))
+    else:
+        with open(args.input, "r", encoding="utf-8") as f:
+            text = f.read()
+        sections = split_script(text)
 
-    sections = split_script(text)
     if not sections:
         raise SystemExit("No content parsed from script.")
 
@@ -59,6 +73,7 @@ def main():
         fps=args.fps,
         crossfade=args.crossfade,
         keep_temp=args.keep_temp,
+        visual_data_list=visual_data_list,
     )
 
     print(f"Video saved to: {video_path}")
