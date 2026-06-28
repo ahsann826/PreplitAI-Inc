@@ -44,20 +44,20 @@ const HowItWorks = () => {
         <div className="grid md:grid-cols-2 gap-5">
 
           {/* Card 1 — Large spanning card */}
-          <div className={`relative flex flex-col rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
-            <div className="p-8 pb-0">
+          <div className={`relative flex flex-col min-h-[420px] rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
+            <div className="p-8">
               <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
                 {steps[0].label}
               </span>
-              <h3 className="text-2xl font-bold tracking-tight text-black dark:text-white leading-snug mb-6 whitespace-pre-line">
+              <h3 className="text-2xl font-bold tracking-tight text-black dark:text-white leading-snug mb-0 whitespace-pre-line">
                 {steps[0].headline}
               </h3>
             </div>
-            <div className="px-8 flex-1 flex items-end">
+            <div className="flex-1 relative mx-8 mb-0 min-h-[200px]">
               <img
                 src={steps[0].image}
                 alt={steps[0].alt}
-                className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-cover object-top"
+                className="absolute inset-0 w-full h-full object-cover object-top rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10"
               />
             </div>
           </div>
