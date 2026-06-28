@@ -34,7 +34,7 @@ export const TopNav = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-white/10 transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-black/70 backdrop-blur-md border-b border-gray-200/50 dark:border-white/10 transition-all duration-300">
       <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
         {/* Left: Logo */}
         <a href="/" className="flex items-center gap-2 group">
