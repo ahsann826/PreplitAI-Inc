@@ -5,15 +5,10 @@ import { motion } from "framer-motion";
 import {
   CheckCircle2,
   ArrowRight,
-  GraduationCap,
-  Shield,
-  Globe,
-  Brain,
 } from "lucide-react";
 
 const capabilities = [
   {
-    icon: Brain,
     title: "Create",
     items: [
       "Text to Speech with studio‑quality voices",
@@ -23,7 +18,6 @@ const capabilities = [
     ],
   },
   {
-    icon: GraduationCap,
     title: "Study",
     items: [
       "Auto‑generated practice questions",
@@ -33,7 +27,6 @@ const capabilities = [
     ],
   },
   {
-    icon: Globe,
     title: "Platform",
     items: [
       "Upload PDF, DOCX, or text",
@@ -43,7 +36,6 @@ const capabilities = [
     ],
   },
   {
-    icon: Shield,
     title: "Security",
     items: [
       "SSO, role‑based permissions",
@@ -170,9 +162,7 @@ const FeaturesPage = () => {
               variants={fadeUp}
               className="group p-8 rounded-2xl border border-gray-200 bg-white hover:border-[#630000]/30 transition-colors duration-300"
             >
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#630000]/8 mb-6">
-                <cap.icon className="w-5 h-5 text-[#630000]" />
-              </div>
+
 
               <h3 className="text-xl font-semibold text-gray-950 mb-4">
                 {cap.title}

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Footer } from "@/components/layout/Footer";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { motion } from "framer-motion";
-import { CheckCircle2, Building2, Lock, Sparkles, Users } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -99,7 +99,6 @@ const Enterprise = () => {
             custom={0}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#630000]/8 dark:bg-[#630000]/20 border border-[#630000]/20 dark:border-[#630000]/30 mb-8">
-              <Building2 className="w-4 h-4 text-[#630000] dark:text-[#ff9999]" />
               <span className="text-[13px] font-medium text-[#630000] dark:text-[#ffaaaa]">PreplitAI for Enterprise</span>
             </div>
             
@@ -128,10 +127,10 @@ const Enterprise = () => {
       {/* Value blocks */}
       <section className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-6 pb-24">
         {[
-          { title: "Company knowledge", icon: Building2, desc: "One home that's organized, searchable, and accurate.", items: bullets.knowledge },
-          { title: "Enterprise search", icon: Users, desc: "Instantly surface answers across PreplitAI with citations.", items: bullets.search },
-          { title: "AI for every team", icon: Sparkles, desc: "Automate manual tasks and accelerate content creation.", items: bullets.ai },
-          { title: "Security & admin", icon: Lock, desc: "Enterprise-grade controls to keep data safe and compliant.", items: bullets.security },
+          { title: "Company knowledge", desc: "One home that's organized, searchable, and accurate.", items: bullets.knowledge },
+          { title: "Enterprise search", desc: "Instantly surface answers across PreplitAI with citations.", items: bullets.search },
+          { title: "AI for every team", desc: "Automate manual tasks and accelerate content creation.", items: bullets.ai },
+          { title: "Security & admin", desc: "Enterprise-grade controls to keep data safe and compliant.", items: bullets.security },
         ].map((block, i) => (
           <motion.div
             key={i}
@@ -142,9 +141,7 @@ const Enterprise = () => {
             custom={i}
             className="p-8 md:p-10 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black hover:border-[#630000]/30 dark:hover:border-[#630000]/40 transition-colors group"
           >
-            <div className="w-12 h-12 rounded-xl bg-[#630000]/8 dark:bg-[#630000]/20 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-              <block.icon className="w-6 h-6 text-[#630000] dark:text-[#ff9999]" />
-            </div>
+
             <h2 className="text-xl font-bold text-black dark:text-white tracking-tight mb-2">{block.title}</h2>
             <p className="text-[15px] text-gray-500 dark:text-gray-400 mb-6">{block.desc}</p>
             <ul className="space-y-3">
