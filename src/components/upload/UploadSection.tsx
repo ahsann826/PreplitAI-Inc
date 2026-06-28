@@ -7,6 +7,16 @@ import { LectureModal } from "./LectureModal";
 import { modes } from "./uploadData";
 import { LectureMode, LectureStyle, LectureData } from "@/types/api";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 export const UploadSection = () => {
   const [selectedMode, setSelectedMode] = useState<LectureMode>("summary");
   const selectedStyle: LectureStyle = "visual";
@@ -15,6 +25,7 @@ export const UploadSection = () => {
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [generatedLecture, setGeneratedLecture] = useState<LectureData | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showUnavailable, setShowUnavailable] = useState(false);
 
   // New states for pasted notes support
   const [inputType, setInputType] = useState<"file" | "paste">("file");
@@ -22,6 +33,9 @@ export const UploadSection = () => {
   const [pastedTitle, setPastedTitle] = useState("");
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setShowUnavailable(true);
+    return;
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -50,6 +64,8 @@ export const UploadSection = () => {
   };
 
   const handleGenerateLecture = async () => {
+    setShowUnavailable(true);
+    return;
     let currentDocId = documentId;
 
     if (inputType === "paste") {
@@ -300,6 +316,27 @@ export const UploadSection = () => {
         onClose={() => setShowModal(false)}
         lecture={generatedLecture}
       />
+
+      <AlertDialog open={showUnavailable} onOpenChange={setShowUnavailable}>
+        <AlertDialogContent className="max-w-md p-6 rounded-2xl bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 shadow-xl">
+          <AlertDialogHeader className="mb-4">
+            <AlertDialogTitle className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <span className="text-2xl">⚠️</span> Service Unavailable
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm pt-2">
+              Sorry, our services are not available at this time. Only the developers are allowed to request access from the server. Please wait for our official launch!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction 
+              onClick={() => setShowUnavailable(false)}
+              className="w-full sm:w-auto px-6 rounded-full bg-black hover:bg-gray-800 text-white dark:bg-white dark:hover:bg-gray-200 dark:text-black font-medium transition-all"
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 };
