@@ -1,4 +1,4 @@
-import { Zap, BookOpen, Target, LucideIcon } from "lucide-react";
+import { Sparkles, BookOpen, Target, LucideIcon } from "lucide-react";
 import { LectureMode } from "@/types/api";
 
 export interface ModeOption {
@@ -13,7 +13,7 @@ export const modes: ModeOption[] = [
     id: "summary",
     name: "Summary Mode",
     description: "Quick overview of key concepts",
-    icon: Zap
+    icon: Sparkles
   },
   {
     id: "detailed",

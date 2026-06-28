@@ -94,4 +94,37 @@ router.post('/', upload.single('file'), async (req, res) => {
   }
 });
 
+// Upload raw text notes
+router.post('/text', async (req, res) => {
+  try {
+    const { text, title } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: 'Text is required' });
+    }
+
+    const filename = (title || 'notes').replace(/[^a-zA-Z0-9]/g, '_') + '-' + Date.now() + '-' + Math.round(Math.random() * 1E9) + '.txt';
+    const uploadDir = path.join(__dirname, '../uploads');
+    await fs.mkdir(uploadDir, { recursive: true });
+    
+    const storedPath = path.join(uploadDir, filename);
+    await fs.writeFile(storedPath, text, 'utf-8');
+
+    // Parse the document text for word count and details
+    res.json({
+      success: true,
+      documentId: filename,
+      fileName: (title || 'pasted-notes.txt'),
+      textPreview: text.substring(0, 200) + '...',
+      wordCount: text.split(/\s+/).filter(Boolean).length,
+      message: 'Raw text notes processed successfully'
+    });
+  } catch (error) {
+    console.error('Raw text upload error:', error);
+    res.status(500).json({
+      error: 'Failed to process raw text notes',
+      message: error.message
+    });
+  }
+});
+
 module.exports = router;

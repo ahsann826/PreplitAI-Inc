@@ -3,7 +3,6 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs').promises;
 const path = require('path');
 const EventEmitter = require('events');
-const didService = require('./did.cjs');
 const storageService = require('./storage');
 const videoService = require('./video');
 const creditService = require('./creditService');
@@ -114,44 +113,15 @@ class QueueService extends EventEmitter {
         let localFilePath = null;
         let filesToCleanup = [];
 
-        if (options.provider === 'did') {
-          const apiKey = process.env.DID_API_KEY;
-          if (!apiKey) throw new Error('DID_API_KEY is missing');
-          
-          // Chunk the script if it exceeds D-ID limits
-          const chunks = chunkScript(script, 8000);
-          console.log(`[Queue] Script split into ${chunks.length} chunks`);
-          
-          const chunkPaths = [];
-          for (let i = 0; i < chunks.length; i++) {
-            console.log(`[Queue] Generating chunk ${i+1}/${chunks.length}...`);
-            const chunkPath = await didService.generateDidVideo({
-              text: chunks[i],
-              voiceId: options.voiceId,
-              driverUrl: options.driverUrl,
-              ratio: options.ratio
-            }, outDir, apiKey);
-            chunkPaths.push(chunkPath);
-            filesToCleanup.push(chunkPath);
-          }
-
-          // Merge chunks
-          localFilePath = path.join(outDir, `final_${job.id}.mp4`);
-          console.log('[Queue] Merging video chunks...');
-          await this.concatVideos(chunkPaths, localFilePath);
-          filesToCleanup.push(localFilePath);
-          
-        } else {
-          // Fallback Python generator (also safe to chunk if needed, but handled inside python mostly)
-          const tempTxt = path.join(outDir, `temp_${job.id}.txt`);
-          await fs.writeFile(tempTxt, script);
-          filesToCleanup.push(tempTxt);
-          
-          const { outMp4, outSrt } = await videoService.generateVideoFromTextFile(tempTxt, options);
-          localFilePath = outMp4;
-          filesToCleanup.push(outMp4);
-          if (outSrt) filesToCleanup.push(outSrt);
-        }
+        // Generate visual slides and diagrams video lecture using python generator
+        const tempTxt = path.join(outDir, `temp_${job.id}.txt`);
+        await fs.writeFile(tempTxt, script);
+        filesToCleanup.push(tempTxt);
+        
+        const { outMp4, outSrt } = await videoService.generateVideoFromTextFile(tempTxt, options);
+        localFilePath = outMp4;
+        filesToCleanup.push(outMp4);
+        if (outSrt) filesToCleanup.push(outSrt);
 
         // Upload to Cloud Storage
         resultUrl = await storageService.uploadFile(localFilePath, 'video');

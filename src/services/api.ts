@@ -33,6 +33,26 @@ export const api = {
   },
 
   /**
+   * Upload raw text notes
+   */
+  async uploadText(text: string, title?: string): Promise<UploadResponse> {
+    const response = await fetch(`${API_BASE_URL}/upload/text`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text, title }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Upload text failed');
+    }
+
+    return response.json();
+  },
+
+  /**
    * Generate lecture from uploaded document
    */
   async generateLecture(

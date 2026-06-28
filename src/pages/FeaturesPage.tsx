@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   CheckCircle2,
   ArrowRight,
-  Zap,
+  GraduationCap,
   Shield,
   Globe,
   Brain,
@@ -23,7 +23,7 @@ const capabilities = [
     ],
   },
   {
-    icon: Zap,
+    icon: GraduationCap,
     title: "Study",
     items: [
       "Auto‑generated practice questions",
