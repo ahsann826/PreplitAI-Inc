@@ -14,33 +14,33 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    /* Brand — Red */
-    --primary: 0 80% 50%;
+    /* Brand — Deep Red */
+    --primary: 350 89% 45%; /* Deep Red */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 0 80% 30%;
+    --primary-glow: 350 89% 70%;
     
-    --secondary: 0 10% 94%;
-    --secondary-foreground: 0 10% 10%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 0 8% 94%;
-    --muted-foreground: 0 5% 46%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 46%;
 
-    --accent: 0 75% 35%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 10%;
     
     /* Extras */
-    --accent-summary: 0 80% 50%;
-    --accent-detailed: 0 70% 40%;
-    --accent-test: 0 60% 45%;
+    --accent-summary: 350 89% 45%;
+    --accent-detailed: 350 79% 35%;
+    --accent-test: 350 69% 25%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 20% 88%;
-    --input: 220 20% 88%;
-    --ring: 0 72% 51%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 350 89% 45%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem; /* modern slightly smaller radius */
   }
 
   .dark {
@@ -60,15 +60,15 @@
     --muted: 240 5% 20%;
     --muted-foreground: 240 5% 65%;
 
-    --accent: 0 75% 30%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 10% 18%;
-    --input: 0 10% 15%;
-    --ring: 0 80% 50%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 350 89% 45%;
   }
 }
 
@@ -109,24 +109,24 @@
   
   /* Premium Glass Effects */
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+    @apply bg-white/70 backdrop-blur-xl border border-gray-200/50 dark:bg-black/70 dark:border-white/10;
   }
   
   .glass-card {
-    @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-2xl border border-white/20;
+    @apply bg-gradient-to-br from-white/90 to-white/50 backdrop-blur-2xl border border-gray-200/50 dark:from-white/10 dark:to-white/5 dark:border-white/10;
   }
   
-  /* Premium Shadows */
+  /* Premium Shadows (Vercel/Stripe style) */
   .shadow-premium {
-    box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15), 0 0 0 1px rgba(15, 23, 42, 0.1);
+    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 4px 16px -4px rgba(0, 0, 0, 0.05);
   }
   
   .shadow-glow {
-    box-shadow: 0 0 60px rgba(220, 38, 38, 0.4), 0 0 30px rgba(15, 23, 42, 0.5);
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.15), 0 0 20px rgba(0, 0, 0, 0.05);
   }
   
   .shadow-intense {
-    box-shadow: 0 20px 60px rgba(220, 38, 38, 0.3), 0 0 40px rgba(15, 23, 42, 0.3);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 40px rgba(99, 102, 241, 0.1);
   }
   
   /* Premium Animations */

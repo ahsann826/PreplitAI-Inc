@@ -34,33 +34,33 @@ export const TopNav = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/60 dark:bg-gray-950/60 backdrop-blur-xl backdrop-saturate-150">
-      <div className="max-w-7xl mx-auto h-14 px-4 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-gray-200/50 dark:border-white/10 transition-all duration-300">
+      <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
         {/* Left: Logo */}
-        <a href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="PreplitAI Logo" className="h-8 w-auto dark:invert" />
-          <span className="text-xl font-bold text-black dark:text-white">PreplitAI</span>
+        <a href="/" className="flex items-center gap-2 group">
+          <img src="/logo.png" alt="PreplitAI Logo" className="h-11 w-auto transition-transform group-hover:scale-105 dark:drop-shadow-[0_0_1px_rgba(255,255,255,1)]" />
+          <span className="text-[17px] font-semibold tracking-tight text-black dark:text-white">PreplitAI</span>
         </a>
 
         {/* Center: Menu (desktop) */}
         <div className="hidden md:block">
           <NavigationMenu>
-            <NavigationMenuList className="items-center gap-1">
+            <NavigationMenuList className="items-center gap-2">
               {/* Simple links */}
               <NavigationMenuItem>
-                <a href="/features" className="text-sm px-3 py-2 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Features</a>
+                <a href="/features" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Features</a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/ai" className="text-sm px-3 py-2 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">AI</a>
+                <a href="/ai" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">AI</a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/enterprise" className="text-sm px-3 py-2 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Enterprise</a>
+                <a href="/enterprise" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Enterprise</a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/pricing" className="text-sm px-3 py-2 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">Pricing</a>
+                <a href="/pricing" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">Pricing</a>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/about" className="text-sm px-3 py-2 rounded-md text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10">About</a>
+                <a href="/about" className="text-[14px] font-medium px-3 py-2 rounded-md text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition-colors">About</a>
               </NavigationMenuItem>
 
               {/* Explore mega menu */}
@@ -138,19 +138,19 @@ export const TopNav = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 onClick={() => { setAuthTab("login"); setShowAuthModal(true); }}
-                className="hover:bg-transparent text-black dark:text-white font-normal"
+                className="hover:bg-transparent text-[14px] text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white font-medium px-2"
               >
-                LOGIN
+                Log in
               </Button>
               <Button
                 onClick={() => { setAuthTab("signup"); setShowAuthModal(true); }}
-                className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black font-semibold rounded-full px-5"
+                className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-medium text-[14px] rounded-lg px-4 h-9 shadow-sm transition-all hover:scale-[0.98]"
               >
-                SIGN UP
+                Sign Up
               </Button>
             </div>
           )}

@@ -20,38 +20,38 @@ const steps = [
 
 export const HowItWorks = () => {
   return (
-    <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-24 px-6 bg-gray-50/50 dark:bg-black border-y border-gray-100 dark:border-white/10">
+      <div className="max-w-5xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-black dark:text-white">
+        <div className="text-center mb-20">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight text-black dark:text-white">
             How It Works
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
+          <p className="text-[15px] text-gray-500 dark:text-gray-400">
             Three simple steps to transform your notes into lectures
           </p>
         </div>
 
         {/* Steps Grid */}
-        <div className="grid md:grid-cols-3 gap-12">
+        <div className="grid md:grid-cols-3 gap-x-12 gap-y-16">
           {steps.map((step, index) => (
             <div key={index} className="relative">
               <div className="flex flex-col items-center text-center">
                 {/* Step Number */}
-                <div className="w-12 h-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-bold text-lg mb-6">
+                <div className="w-8 h-8 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-bold text-[13px] mb-8 shadow-sm">
                   {index + 1}
                 </div>
                 
                 {/* Icon */}
-                <div className="w-16 h-16 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-6">
-                  <step.icon className="h-8 w-8 text-black dark:text-white" />
+                <div className="w-14 h-14 rounded-xl bg-gray-100/80 dark:bg-white/5 border border-gray-200/60 dark:border-white/10 flex items-center justify-center mb-6 shadow-sm">
+                  <step.icon className="h-6 w-6 text-black dark:text-white" strokeWidth={2} />
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-2xl font-bold mb-3 text-black dark:text-white">
+                <h3 className="text-[17px] font-bold mb-3 tracking-tight text-black dark:text-white">
                   {step.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-[14px] text-gray-500 dark:text-gray-400 leading-relaxed max-w-[260px]">
                   {step.description}
                 </p>
               </div>

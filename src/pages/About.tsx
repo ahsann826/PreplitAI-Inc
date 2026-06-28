@@ -1,96 +1,146 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Footer } from "@/components/layout/Footer";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.5, ease: [0.25, 0.4, 0.25, 1] },
+  }),
+};
+
+const stats = [
+  { value: "1M+", label: "Learners empowered" },
+  { value: "190+", label: "Countries reached" },
+  { value: "10x", label: "Faster content creation" },
+  { value: "95%", label: "Avg. satisfaction" },
+];
 
 const About = () => {
   const siteUrl = (import.meta as any).env?.VITE_SITE_URL || "https://yourdomain.com";
   const canonical = `${siteUrl}/about`;
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 overflow-x-hidden">
+    <div className="min-h-screen bg-white dark:bg-black">
       <SEOHead
         title="About PreplitAI"
-        description="We’re building the most realistic AI lecture platform to help teams create high‑quality video lessons."
+        description="We're building the most realistic AI lecture platform to help teams create high‑quality video lessons."
         url={canonical}
         canonical={canonical}
       />
+
       {/* Hero */}
-      <section className="relative px-6 pt-24 pb-16 overflow-hidden">
-        <div className="absolute top-0 -left-48 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 -right-48 w-96 h-96 bg-red-900/10 dark:bg-red-900/5 rounded-full blur-3xl" />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white mb-6 leading-tight">
-            About <span className="text-red-600 dark:text-red-500">PreplitAI</span>
+      <section className="max-w-5xl mx-auto px-6 pt-32 pb-20">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          custom={0}
+        >
+          <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-4 tracking-wide uppercase">About us</p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-black dark:text-white leading-[1.1] tracking-tight mb-6">
+            We're building the future
+            <br />
+            of AI education.
           </h1>
-          <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed">
-            We're building the most realistic AI lecture platform to help students and teams
-            learn faster, retain more, and create high‑quality video lessons from any notes.
+          <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed">
+            PreplitAI transforms raw notes into engaging, instructor-level video lectures — instantly. We believe high-quality education should be accessible to everyone, everywhere.
           </p>
+        </motion.div>
+      </section>
+
+      {/* Stats */}
+      <section className="border-y border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.02]">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                custom={i}
+                className="text-center"
+              >
+                <div className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">{stat.value}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Mission */}
-      <section className="px-6 py-10 bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-start">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-semibold text-black dark:text-white mb-3">Our Mission</h2>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              Make high‑quality education accessible to everyone by transforming raw material into
-              engaging, instructor‑level lectures—instantly. With AI avatars, scene composition,
-              and structured scripts, anyone can create professional learning experiences.
+      <section className="max-w-5xl mx-auto px-6 py-24">
+        <div className="grid md:grid-cols-2 gap-16 items-start">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <h2 className="text-2xl md:text-3xl font-semibold text-black dark:text-white mb-4 tracking-tight">Our Mission</h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-[15px]">
+              Make high-quality education accessible to everyone by transforming raw material into
+              engaging, instructor-level lectures — instantly. With AI avatars, scene composition,
+              and structured scripts, anyone can create professional learning experiences without
+              expensive equipment or production teams.
             </p>
-          </div>
-          <Card className="p-6 bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
-            <ul className="grid grid-cols-2 gap-6 text-center">
-              <li>
-                <div className="text-3xl font-bold text-black dark:text-white">1M+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Learners empowered</div>
-              </li>
-              <li>
-                <div className="text-3xl font-bold text-black dark:text-white">190+</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Countries reached</div>
-              </li>
-              <li>
-                <div className="text-3xl font-bold text-black dark:text-white">10x</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Faster content</div>
-              </li>
-              <li>
-                <div className="text-3xl font-bold text-black dark:text-white">95%</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Avg. satisfaction</div>
-              </li>
-            </ul>
-          </Card>
-        </div>
-      </section>
-
-      {/* Story */}
-      <section className="px-6 py-12">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-          <Card className="p-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 order-2 md:order-1">
-            <h3 className="text-xl md:text-2xl font-semibold text-black dark:text-white mb-3">Our Story</h3>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          </motion.div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={1}
+          >
+            <h2 className="text-2xl md:text-3xl font-semibold text-black dark:text-white mb-4 tracking-tight">Our Story</h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-[15px]">
               PreplitAI began as a way to turn messy study notes into clear, engaging lectures. We
-              combined state‑of‑the‑art generative models with thoughtful UX to streamline the entire
-              process—from document parsing to scene composition to video rendering.
+              combined state-of-the-art generative models with thoughtful UX to streamline the entire
+              process — from document parsing to scene composition to video rendering. Today, we serve
+              learners and educators across 190+ countries.
             </p>
-          </Card>
-          <div className="order-1 md:order-2">
-            <div className="aspect-video w-full rounded-xl bg-red-600/15 border border-gray-200 dark:border-gray-800" />
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="px-6 pb-16">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <Button asChild className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black">
-            <a href="/demo">Request a demo</a>
-          </Button>
-          <Button asChild variant="outline" className="border-2 border-gray-300 dark:border-gray-700">
-            <a href="/">Back to home</a>
-          </Button>
+      <section className="border-t border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.02]">
+        <div className="max-w-5xl mx-auto px-6 py-20 text-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-4 tracking-tight">Ready to get started?</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto">
+              Join over a million learners creating AI-powered lectures from their notes.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Button asChild className="bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black rounded-lg px-6 h-11 font-medium shadow-sm transition-all hover:scale-[0.98]">
+                <a href="/demo">
+                  Request a demo
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+              <Button asChild variant="outline" className="border-gray-300 dark:border-gray-700 rounded-lg px-6 h-11 font-medium text-black dark:text-white transition-all hover:scale-[0.98]">
+                <a href="/">Back to home</a>
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </section>
-    </main>
+
+      <Footer />
+    </div>
   );
 };
 

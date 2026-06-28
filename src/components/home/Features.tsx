@@ -1,5 +1,4 @@
 import { Mic, Video, FileText, Brain, Target, Upload } from "lucide-react";
-import { Card } from "@/components/ui/card";
 
 const features = [
   {
@@ -36,35 +35,35 @@ const features = [
 
 export const Features = () => {
   return (
-    <section className="py-20 px-6 bg-white dark:bg-gray-950">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-24 px-6 bg-white dark:bg-black">
+      <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-black dark:text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 tracking-tight text-black dark:text-white">
             Everything you need to learn better
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-[15px] text-gray-500 dark:text-gray-400">
             Powerful AI features designed to transform your notes into engaging lectures
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <Card 
+            <div 
               key={index}
-              className="p-8 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow duration-200"
+              className="p-8 rounded-xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-black hover:shadow-md transition-shadow duration-300"
             >
-              <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-6">
-                <feature.icon className="h-6 w-6 text-black dark:text-white" />
+              <div className="w-10 h-10 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 flex items-center justify-center mb-6">
+                <feature.icon className="h-5 w-5 text-black dark:text-white" strokeWidth={2} />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-black dark:text-white">
+              <h3 className="text-[16px] font-bold mb-3 tracking-tight text-black dark:text-white">
                 {feature.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-[14px] text-gray-500 dark:text-gray-400 leading-relaxed">
                 {feature.description}
               </p>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

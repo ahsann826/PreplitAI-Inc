@@ -25,10 +25,9 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
           {/* Left Column - Text Content */}
           <div className="text-left animate-fade-in">
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
-              <span className="text-black dark:text-white">The most realistic </span>
-              <span className="text-black dark:text-white">AI lecture </span>
-              <span className="text-red-600 dark:text-red-500">platform</span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 tracking-tight">
+              <span className="text-black dark:text-white">We're building the future of </span>
+              <span className="text-primary">AI education.</span>
             </h1>
 
             {/* Subheadline */}
@@ -62,14 +61,14 @@ Over 1,000,000 students use PreplitAI to create realistic lecture experiences.
 
           {/* Right Column - Video/Demo Placeholder */}
           <div className="relative animate-fade-in animation-delay-400">
-            <div className="aspect-video bg-black dark:bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center relative shadow-xl">
-              <div className="absolute inset-0 bg-red-600/20" />
+            <div className="aspect-video bg-black dark:bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center relative shadow-xl border border-gray-200 dark:border-gray-800">
+              <div className="absolute inset-0 bg-primary/20" />
               <div className="relative z-10 text-center px-4">
                 <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-white/20 transition-all">
                   <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1" />
                 </div>
                 <p className="text-white text-base font-semibold">
-                  Building <span className="text-red-500 dark:text-red-400">AI agents</span> that can speak
+                  Building <span className="text-primary">AI agents</span> that can speak
                 </p>
               </div>
             </div>
