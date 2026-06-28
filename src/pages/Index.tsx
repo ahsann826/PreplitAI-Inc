@@ -64,12 +64,8 @@ const Index = () => {
       <UploadSection />
 
       {/* Bottom CTA Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(185,28,28,0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(185,28,28,0.1),transparent_50%)]" />
-        
-        <div className="relative z-10 max-w-4xl mx-auto px-6 py-28 text-center">
+      <section className="bg-gray-950">
+        <div className="max-w-4xl mx-auto px-6 py-28 text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
             Start creating lectures
             <br />

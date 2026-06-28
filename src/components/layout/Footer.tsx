@@ -1,9 +1,7 @@
 import { Github, Twitter, Linkedin, Youtube } from "lucide-react";
 
 export const Footer = () => (
-  <footer className="relative bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(185,28,28,0.15),transparent_50%)] pointer-events-none" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(185,28,28,0.1),transparent_50%)] pointer-events-none" />
+  <footer className="bg-gray-950">
     <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 pb-10">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
         {/* Brand */}
