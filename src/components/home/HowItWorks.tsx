@@ -53,11 +53,11 @@ const HowItWorks = () => {
                 {steps[0].headline}
               </h3>
             </div>
-            <div className="flex-1 relative mx-8 mb-0 min-h-[200px]">
+            <div className="mt-auto px-8 pt-8 flex items-end">
               <img
                 src={steps[0].image}
                 alt={steps[0].alt}
-                className="absolute inset-0 w-full h-full object-cover object-top rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10"
+                className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-contain"
               />
             </div>
           </div>
