@@ -43,22 +43,32 @@ const HowItWorks = () => {
         {/* Bento Grid — Notion style */}
         <div className="grid md:grid-cols-2 gap-5">
 
-          {/* Card 1 — Large spanning card */}
-          <div className={`relative flex flex-col h-fit rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
-            <div className="p-8">
-              <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
-                {steps[0].label}
-              </span>
-              <h3 className="text-2xl font-bold tracking-tight text-black dark:text-white leading-snug mb-0 whitespace-pre-line">
-                {steps[0].headline}
-              </h3>
+          {/* Left column */}
+          <div className="flex flex-col h-full gap-5">
+            {/* Card 1 — Large spanning card */}
+            <div className={`relative flex flex-col h-fit rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
+              <div className="p-8">
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
+                  {steps[0].label}
+                </span>
+                <h3 className="text-2xl font-bold tracking-tight text-black dark:text-white leading-snug mb-0 whitespace-pre-line">
+                  {steps[0].headline}
+                </h3>
+              </div>
+              <div className="px-8 pt-8 flex items-end">
+                <img
+                  src={steps[0].image}
+                  alt={steps[0].alt}
+                  className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-contain"
+                />
+              </div>
             </div>
-            <div className="px-8 pt-8 flex items-end">
-              <img
-                src={steps[0].image}
-                alt={steps[0].alt}
-                className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-contain"
-              />
+
+            {/* Typography Filler block */}
+            <div className="flex-1 rounded-2xl border border-dashed border-gray-200 dark:border-white/10 flex items-center justify-center p-8">
+              <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-400/80 dark:text-gray-500 text-center leading-snug">
+                3 steps is all<br />you need.
+              </h3>
             </div>
           </div>
 
