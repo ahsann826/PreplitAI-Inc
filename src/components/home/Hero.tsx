@@ -63,21 +63,17 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
             </p>
           </div>
 
-          {/* Right Column - Video/Demo Placeholder */}
+          {/* Right Column - Video/Demo */}
           <div className="relative animate-fade-in animation-delay-400">
-            <div className="aspect-video bg-black dark:bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center relative shadow-xl border border-gray-200 dark:border-gray-800">
-              <div className="absolute inset-0 bg-[#630000]/20" />
-              <div className="relative z-10 text-center px-4">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-white/20 transition-all">
-                  <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1" />
-                </div>
-                <p className="text-white text-base font-semibold">
-                  Building <span className="text-[#a00000]">AI agents</span> that can speak
-                </p>
-              </div>
-            </div>
-            <div className="mt-4 text-center">
-              <p className="text-base font-semibold text-black dark:text-white">Build AI Agents that speak</p>
+            <div className="aspect-video bg-black dark:bg-gray-900 rounded-xl overflow-hidden relative shadow-xl border border-gray-200 dark:border-gray-800">
+              <video
+                src="/videos/demo.mp4"
+                className="w-full h-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
             </div>
           </div>
         </div>
