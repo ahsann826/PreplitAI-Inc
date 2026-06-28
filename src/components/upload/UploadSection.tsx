@@ -66,7 +66,7 @@ export const UploadSection = () => {
   return (
     <section
       id="upload-section"
-      className="py-28 px-6 bg-[#faf9f7] dark:bg-[#111]"
+      className="pt-8 pb-24 px-6 bg-[#faf9f7] dark:bg-[#111]"
     >
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}

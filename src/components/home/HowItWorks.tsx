@@ -44,7 +44,7 @@ const HowItWorks = () => {
         <div className="grid md:grid-cols-2 gap-5">
 
           {/* Card 1 — Large spanning card */}
-          <div className={`relative rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
+          <div className={`relative flex flex-col rounded-2xl overflow-hidden border border-gray-200/60 dark:border-white/10 ${steps[0].accent} dark:bg-white/5 group cursor-pointer`}>
             <div className="p-8 pb-0">
               <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-100 dark:bg-red-500/20 px-3 py-1 rounded-full mb-4">
                 {steps[0].label}
@@ -53,11 +53,11 @@ const HowItWorks = () => {
                 {steps[0].headline}
               </h3>
             </div>
-            <div className="px-8 pb-0">
+            <div className="px-8 flex-1 flex items-end">
               <img
                 src={steps[0].image}
                 alt={steps[0].alt}
-                className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-cover"
+                className="w-full rounded-t-xl shadow-lg border border-gray-200/40 dark:border-white/10 object-cover object-top"
               />
             </div>
           </div>
