@@ -71,19 +71,22 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
             </p>
           </div>
 
-          {/* Right Column - Product Mockup */}
-          <div className="relative">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40 border border-gray-200/60 dark:border-white/10">
-              <img 
-                src="/hero-mockup.png" 
-                alt="PreplitAI Platform - AI-powered lecture creation interface" 
-                className="w-full h-auto"
-                loading="eager"
-              />
+          {/* Right Column - Video/Demo Placeholder */}
+          <div className="relative animate-fade-in animation-delay-400">
+            <div className="aspect-video bg-black dark:bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center relative shadow-xl border border-gray-200 dark:border-gray-800">
+              <div className="absolute inset-0 bg-red-600/20" />
+              <div className="relative z-10 text-center px-4">
+                <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-white/20 transition-all">
+                  <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1" />
+                </div>
+                <p className="text-white text-base font-semibold">
+                  Building <span className="text-red-500">AI agents</span> that can speak
+                </p>
+              </div>
             </div>
-            {/* Floating accent glow */}
-            <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -top-8 -left-8 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="mt-4 text-center">
+              <p className="text-base font-semibold text-black dark:text-white">Build AI Agents that speak</p>
+            </div>
           </div>
         </div>
 
