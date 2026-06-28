@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   const universities = [
@@ -17,64 +18,72 @@ export const Hero = ({ onGetStarted }: { onGetStarted: () => void }) => {
   const marqueeItems = [...halfTrack, ...halfTrack];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-white dark:bg-gray-950 overflow-x-hidden">
-      {/* Content */}
-      <div className="relative z-10 w-full px-6 py-8">
+    <section className="relative min-h-[90vh] flex items-center justify-center bg-white dark:bg-[#0a0a0a] overflow-hidden">
+      {/* Subtle background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-red-50/40 via-transparent to-transparent dark:from-red-950/20 dark:via-transparent pointer-events-none" />
+
+      <div className="relative z-10 w-full px-6 pt-20 pb-8">
         {/* Main Content Grid */}
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center mt-6">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Text Content */}
-          <div className="text-left animate-fade-in">
+          <div className="text-left">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 mb-8">
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-[13px] font-medium text-red-700 dark:text-red-300">Now in public beta</span>
+            </div>
+
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 tracking-tight">
-              <span className="text-black dark:text-white">We're building the future of </span>
-              <span className="text-primary">AI education.</span>
+            <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
+              <span className="text-black dark:text-white">We're building the{" "}</span>
+              <br className="hidden sm:block" />
+              <span className="text-black dark:text-white">future of </span>
+              <span className="bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">AI education.</span>
             </h1>
 
             {/* Subheadline */}
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-xl animate-fade-in animation-delay-200">
-Over 1,000,000 students use PreplitAI to create realistic lecture experiences.
+            <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-lg leading-relaxed">
+              Upload your notes and watch them transform into professional video lectures with AI avatars, natural voices, and intelligent summaries.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-start gap-3 mb-4 animate-fade-in animation-delay-400">
+            <div className="flex flex-col sm:flex-row items-start gap-3 mb-6">
               <Button 
-                className="text-sm px-5 py-4 sm:px-6 sm:py-5 h-auto bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-md font-semibold transition-all duration-200 uppercase"
+                className="text-[15px] px-7 py-3 h-12 bg-black hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-full font-medium transition-all duration-200 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20 hover:-translate-y-0.5"
                 onClick={onGetStarted}
               >
                 Get Started Free
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               
               <Button 
                 asChild
                 variant="outline"
-                className="text-sm px-5 py-4 sm:px-6 sm:py-5 h-auto rounded-md font-semibold border-2 border-gray-300 dark:border-gray-700 bg-white text-black dark:bg-gray-950 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900 transition-all duration-200 uppercase"
+                className="text-[15px] px-7 py-3 h-12 rounded-full font-medium border border-gray-300 dark:border-gray-700 bg-white text-black dark:bg-transparent dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200"
               >
                 <a href="/sales">Talk to Sales</a>
               </Button>
             </div>
 
-            {/* Subtitle */}
-            <p className="text-xs text-gray-500 dark:text-gray-500 italic animate-fade-in animation-delay-600">
-              No credit card required • Cancel anytime
+            {/* Trust line */}
+            <p className="text-[13px] text-gray-400 dark:text-gray-500">
+              Free to start · No credit card required
             </p>
           </div>
 
-          {/* Right Column - Video/Demo Placeholder */}
-          <div className="relative animate-fade-in animation-delay-400">
-            <div className="aspect-video bg-black dark:bg-gray-900 rounded-xl overflow-hidden flex items-center justify-center relative shadow-xl border border-gray-200 dark:border-gray-800">
-              <div className="absolute inset-0 bg-primary/20" />
-              <div className="relative z-10 text-center px-4">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-white/20 transition-all">
-                  <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1" />
-                </div>
-                <p className="text-white text-base font-semibold">
-                  Building <span className="text-primary">AI agents</span> that can speak
-                </p>
-              </div>
+          {/* Right Column - Product Mockup */}
+          <div className="relative">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/40 border border-gray-200/60 dark:border-white/10">
+              <img 
+                src="/hero-mockup.png" 
+                alt="PreplitAI Platform - AI-powered lecture creation interface" 
+                className="w-full h-auto"
+                loading="eager"
+              />
             </div>
-            <div className="mt-4 text-center">
-              <p className="text-base font-semibold text-black dark:text-white">Build AI Agents that speak</p>
-            </div>
+            {/* Floating accent glow */}
+            <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
           </div>
         </div>
 
@@ -86,15 +95,7 @@ Over 1,000,000 students use PreplitAI to create realistic lecture experiences.
             ))}
           </div>
         </div>
-
-        {/* Bottom CTA */}
-        <div className="max-w-7xl mx-auto mt-12 text-center animate-fade-in animation-delay-1000">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">
-            Not ready? Learn more
-          </p>
-        </div>
       </div>
-
     </section>
   );
 };
