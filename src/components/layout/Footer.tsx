@@ -1,4 +1,4 @@
-import { Github, Twitter, Linkedin, Youtube } from "lucide-react";
+import { Github, Twitter, Instagram } from "lucide-react";
 
 export const Footer = () => (
   <footer className="bg-gray-950">
@@ -13,17 +13,14 @@ export const Footer = () => (
             Transform your learning experience with AI-powered video lectures. Built for students, educators, and teams.
           </p>
           <div className="flex items-center gap-2">
-            <a href="#" aria-label="Twitter" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
+            <a href="https://www.instagram.com/preplitai/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a href="https://x.com/preplitai" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
               <Twitter className="h-4 w-4" />
             </a>
-            <a href="#" aria-label="GitHub" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
+            <a href="https://github.com/ahsann826/PreplitAI-Inc" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
               <Github className="h-4 w-4" />
-            </a>
-            <a href="#" aria-label="LinkedIn" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
-              <Linkedin className="h-4 w-4" />
-            </a>
-            <a href="#" aria-label="YouTube" className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all">
-              <Youtube className="h-4 w-4" />
             </a>
           </div>
         </div>
