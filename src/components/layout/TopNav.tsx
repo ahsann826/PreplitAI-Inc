@@ -69,12 +69,6 @@ export const TopNav = () => {
                       <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 px-3 mb-2">Learn</p>
                       <ul className="space-y-0.5">
                         <li>
-                          <a href="/about" className="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition hover:bg-black/5 dark:hover:bg-white/8 focus-visible:outline-none">
-                            <span className="text-[13.5px] font-semibold text-black dark:text-white leading-snug">Our Story</span>
-                            <span className="text-[12px] text-gray-500 dark:text-gray-400">Read about our mission</span>
-                          </a>
-                        </li>
-                        <li>
                           <a href="/about#team" className="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition hover:bg-black/5 dark:hover:bg-white/8 focus-visible:outline-none">
                             <span className="text-[13.5px] font-semibold text-black dark:text-white leading-snug">The Team</span>
                             <span className="text-[12px] text-gray-500 dark:text-gray-400">Meet the people behind it</span>
