@@ -249,4 +249,6 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
 
+Copyright 2026 PreplitAI. All rights reserved.
+
 </div>
