@@ -3,7 +3,8 @@
 # PreplitAI, Inc.
 
 
-<img width="1672" height="941" alt="Preplit AI" src="https://github.com/user-attachments/assets/97c7f80f-edca-4ff4-95e6-7add48f664d3" />
+<img width="1561" height="873" alt="image" src="https://github.com/user-attachments/assets/00af0490-8d58-4492-b618-25d151918f02" />
+
 
 
 ![Status](https://img.shields.io/badge/status-pre--launch-8b0000?style=flat-square)
