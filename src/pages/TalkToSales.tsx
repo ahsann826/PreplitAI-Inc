@@ -100,10 +100,10 @@ const TalkToSales = () => {
           <div className="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
             <h3 className="font-semibold text-black dark:text-white">Contact information</h3>
             <ul className="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-              <li><span className="font-medium">Sales:</span> sales@preplit.ai</li>
-              <li><span className="font-medium">Support:</span> support@preplit.ai</li>
-              <li><span className="font-medium">Hours:</span> Mon–Fri, 9am–6pm PT</li>
-              <li><span className="font-medium">Address:</span> 123 Market St, San Francisco, CA</li>
+              <li><span className="font-medium">Sales:</span> preplitai@gmail.com</li>
+              <li><span className="font-medium">Support:</span> preplitai@gmail.com</li>
+              <li><span className="font-medium">Hours:</span> Mon–Fri, 9am–6pm KST</li>
+              <li><span className="font-medium">Address:</span> Seoul, South Korea</li>
               <li className="text-xs text-gray-500">Enterprise SLAs and security reviews available.</li>
             </ul>
           </div>
