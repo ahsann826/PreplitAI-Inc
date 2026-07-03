@@ -23,12 +23,12 @@ class QueueService extends EventEmitter {
   /**
    * Enqueue a new job
    */
-  addJob(type, data) {
+  async addJob(type, data) {
     const jobId = uuidv4();
-    db.prepare(`
+    await db.query(`
       INSERT INTO jobs (id, type, data, status)
-      VALUES (?, ?, ?, 'pending')
-    `).run(jobId, type, JSON.stringify(data));
+      VALUES ($1, $2, $3, 'pending')
+    `, [jobId, type, JSON.stringify(data)]);
     
     setTimeout(() => this.processNextJob(), 0);
     return jobId;
@@ -37,9 +37,10 @@ class QueueService extends EventEmitter {
   /**
    * Get job status
    */
-  getJob(jobId) {
-    const job = db.prepare('SELECT * FROM jobs WHERE id = ?').get(jobId);
-    if (!job) return null;
+  async getJob(jobId) {
+    const jobResult = await db.query('SELECT * FROM jobs WHERE id = $1', [jobId]);
+    if (jobResult.rows.length === 0) return null;
+    const job = jobResult.rows[0];
     return {
       ...job,
       data: JSON.parse(job.data),
@@ -50,12 +51,12 @@ class QueueService extends EventEmitter {
   /**
    * Update job and emit event
    */
-  updateJobStatus(jobId, status, result = null, error = null) {
-    db.prepare(`
+  async updateJobStatus(jobId, status, result = null, error = null) {
+    await db.query(`
       UPDATE jobs 
-      SET status = ?, result = ?, error = ?, updated_at = CURRENT_TIMESTAMP 
-      WHERE id = ?
-    `).run(status, result ? JSON.stringify(result) : null, error, jobId);
+      SET status = $1, result = $2, error = $3, updated_at = CURRENT_TIMESTAMP 
+      WHERE id = $4
+    `, [status, result ? JSON.stringify(result) : null, error, jobId]);
 
     this.emit('job_updated', { jobId, status, result, error });
   }
@@ -89,17 +90,18 @@ class QueueService extends EventEmitter {
   async processNextJob() {
     if (this.isProcessing) return;
     
-    const job = db.prepare(`
+    const jobResult = await db.query(`
       SELECT * FROM jobs 
       WHERE status = 'pending' 
       ORDER BY created_at ASC 
       LIMIT 1
-    `).get();
+    `);
 
-    if (!job) return;
+    if (jobResult.rows.length === 0) return;
+    const job = jobResult.rows[0];
 
     this.isProcessing = true;
-    this.updateJobStatus(job.id, 'processing');
+    await this.updateJobStatus(job.id, 'processing');
     const data = JSON.parse(job.data);
     
     try {
@@ -152,19 +154,17 @@ class QueueService extends EventEmitter {
         throw new Error(`Unknown job type: ${job.type}`);
       }
 
-      this.updateJobStatus(job.id, 'completed', { videoUrl: resultUrl });
+      await this.updateJobStatus(job.id, 'completed', { videoUrl: resultUrl });
 
     } catch (error) {
       console.error(`Job ${job.id} failed:`, error);
-      this.updateJobStatus(job.id, 'failed', null, error.message);
+      await this.updateJobStatus(job.id, 'failed', null, error.message);
       
       // Refund credits if this job was billed
       if (data.transactionId && data.userId) {
         try {
-          // Note: In a real app we'd need the videoGenerationId, but for now
-          // we can just issue a direct credit refund for the calculated cost
           const cost = creditService.calculateCost({ durationMinutes: data.script.length / 1000 }).total;
-          creditService.creditCredits(data.userId, cost, 'REFUND', `Refund for failed video job ${job.id}`);
+          await creditService.creditCredits(data.userId, cost, 'REFUND', `Refund for failed video job ${job.id}`);
           console.log(`[Queue] Refunded ${cost} credits to user ${data.userId}`);
         } catch (refundErr) {
           console.error('[Queue] Failed to process refund:', refundErr);

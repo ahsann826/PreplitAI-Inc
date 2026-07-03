@@ -28,8 +28,8 @@ router.post('/signup', async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
-    if (existingUser) {
+    const existingUser = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
       return res.status(400).json({ 
         success: false, 
         message: 'Email already registered' 
@@ -40,11 +40,12 @@ router.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const result = db.prepare(
-      'INSERT INTO users (email, password, name) VALUES (?, ?, ?)'
-    ).run(email, hashedPassword, name);
+    const result = await db.query(
+      'INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING id',
+      [email, hashedPassword, name]
+    );
 
-    const userId = result.lastInsertRowid;
+    const userId = result.rows[0].id;
 
     // Generate JWT token
     const token = jwt.sign(
@@ -54,7 +55,8 @@ router.post('/signup', async (req, res) => {
     );
 
     // Get user with credit balance
-    const newUser = db.prepare('SELECT id, email, name, credit_balance FROM users WHERE id = ?').get(userId);
+    const newUserResult = await db.query('SELECT id, email, name, credit_balance FROM users WHERE id = $1', [userId]);
+    const newUser = newUserResult.rows[0];
 
     res.json({
       success: true,
@@ -90,13 +92,14 @@ router.post('/login', async (req, res) => {
     }
 
     // Find user
-    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
-    if (!user) {
+    const userResult = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (userResult.rows.length === 0) {
       return res.status(401).json({ 
         success: false, 
         message: 'Invalid email or password' 
       });
     }
+    const user = userResult.rows[0];
 
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
@@ -135,16 +138,17 @@ router.post('/login', async (req, res) => {
 });
 
 // GET /api/auth/me - Get current user info
-router.get('/me', authMiddleware, (req, res) => {
+router.get('/me', authMiddleware, async (req, res) => {
   try {
-    const user = db.prepare('SELECT id, email, name, credit_balance, created_at FROM users WHERE id = ?').get(req.userId);
+    const userResult = await db.query('SELECT id, email, name, credit_balance, created_at FROM users WHERE id = $1', [req.userId]);
     
-    if (!user) {
+    if (userResult.rows.length === 0) {
       return res.status(404).json({ 
         success: false, 
         message: 'User not found' 
       });
     }
+    const user = userResult.rows[0];
 
     res.json({
       success: true,
@@ -163,15 +167,15 @@ router.get('/me', authMiddleware, (req, res) => {
 });
 
 // PUT /api/auth/profile - Update name
-router.put('/profile', authMiddleware, (req, res) => {
+router.put('/profile', authMiddleware, async (req, res) => {
   try {
     const { name } = req.body;
     if (!name || name.trim().length === 0) {
       return res.status(400).json({ success: false, message: 'Name is required' });
     }
-    db.prepare('UPDATE users SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(name.trim(), req.userId);
-    const user = db.prepare('SELECT id, email, name FROM users WHERE id = ?').get(req.userId);
-    res.json({ success: true, message: 'Profile updated', user });
+    await db.query('UPDATE users SET name = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [name.trim(), req.userId]);
+    const userResult = await db.query('SELECT id, email, name FROM users WHERE id = $1', [req.userId]);
+    res.json({ success: true, message: 'Profile updated', user: userResult.rows[0] });
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({ success: false, message: 'Server error' });
@@ -188,12 +192,15 @@ router.put('/password', authMiddleware, async (req, res) => {
     if (newPassword.length < 6) {
       return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
     }
-    const user = db.prepare('SELECT id, password FROM users WHERE id = ?').get(req.userId);
-    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    const userResult = await db.query('SELECT id, password FROM users WHERE id = $1', [req.userId]);
+    if (userResult.rows.length === 0) return res.status(404).json({ success: false, message: 'User not found' });
+    
+    const user = userResult.rows[0];
     const valid = await bcrypt.compare(currentPassword, user.password);
     if (!valid) return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+    
     const hashed = await bcrypt.hash(newPassword, 10);
-    db.prepare('UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(hashed, req.userId);
+    await db.query('UPDATE users SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [hashed, req.userId]);
     res.json({ success: true, message: 'Password updated' });
   } catch (error) {
     console.error('Change password error:', error);
