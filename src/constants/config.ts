@@ -9,9 +9,7 @@
  * In production, points directly to the Express server.
  * In development, uses the Vite proxy (configured in vite.config.ts).
  */
-export const API_BASE_URL = import.meta.env.PROD
-  ? 'http://localhost:5000/api'
-  : '/api';
+export const API_BASE_URL = '/api';
 
 /** Application display name */
 export const SITE_NAME = 'PreplitAI';

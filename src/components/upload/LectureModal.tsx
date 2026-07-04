@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
 import { Card } from "@/components/ui/card";
-import { DEFAULT_AVATAR_URL, DEFAULT_VOICE_ID } from "@/constants/config";
+import { DEFAULT_AVATAR_URL, DEFAULT_VOICE_ID, API_BASE_URL } from "@/constants/config";
 import { VideoHistoryItem, LectureData } from "@/types/api";
 import { VideoSettings } from "./VideoSettings";
 import { VideoHistoryTab } from "./VideoHistoryTab";
@@ -93,7 +93,7 @@ export const LectureModal = ({ isOpen, onClose, lecture }: LectureModalProps) =>
       // but since it's authMiddleware, let's append it as a query param and backend handles it, OR
       // we use fetch to consume the SSE stream (more robust for Auth headers).
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/video/status/${queueResult.jobId}`, {
+      const response = await fetch(`${API_BASE_URL}/video/status/${queueResult.jobId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

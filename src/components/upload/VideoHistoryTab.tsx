@@ -47,7 +47,7 @@ export const VideoHistoryTab = ({
         ) : (
           <div className="space-y-4">
             {videoHistory.map((video) => {
-              const baseUrl = import.meta.env.PROD ? "http://localhost:5000" : "";
+              const baseUrl = "";
               const fullUrl = `${baseUrl}${video.videoUrl}`;
 
               return (
