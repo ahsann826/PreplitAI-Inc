@@ -73,7 +73,8 @@ router.post('/signup', async (req, res) => {
     console.error('Signup error:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Server error during signup' 
+      message: 'Server error during signup: ' + (error.message || String(error)),
+      stack: error.stack
     });
   }
 });
@@ -132,7 +133,8 @@ router.post('/login', async (req, res) => {
     console.error('Login error:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Server error during login' 
+      message: 'Server error during login: ' + (error.message || String(error)),
+      stack: error.stack
     });
   }
 });
