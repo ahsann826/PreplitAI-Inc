@@ -1,5 +1,5 @@
 const db = require('../db/database');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
 const EventEmitter = require('events');
