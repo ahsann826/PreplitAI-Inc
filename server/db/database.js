@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || "postgresql://postgres:Swaggyswaggy123%23@db.argiroqmigyudozmjocd.supabase.co:5432/postgres",
   ssl: { rejectUnauthorized: false }
 });
 
