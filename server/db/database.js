@@ -1,17 +1,34 @@
 const { Pool } = require('pg');
 
 // ── Startup Validation ────────────────────────────────────────────────────────
-// Fail fast if DATABASE_URL is missing — never fall back to a hardcoded value.
-if (!process.env.DATABASE_URL) {
-  console.error('FATAL: DATABASE_URL environment variable is not set.');
-  console.error('Set DATABASE_URL to your Supabase connection pooler URL and restart.');
+// Prefer individual PG* env vars over DATABASE_URL because passwords containing
+// special characters (e.g. #) cause ERR_INVALID_URL when embedded in a URL string.
+// If only DATABASE_URL is set, fall back to it.
+const hasIndividualVars = process.env.PGHOST && process.env.PGUSER && process.env.PGPASSWORD;
+
+if (!hasIndividualVars && !process.env.DATABASE_URL) {
+  console.error('FATAL: No database credentials found.');
+  console.error('Set either PGHOST + PGUSER + PGPASSWORD + PGDATABASE + PGPORT,');
+  console.error('or DATABASE_URL, in your environment variables.');
   process.exit(1);
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
+const poolConfig = hasIndividualVars
+  ? {
+      host: process.env.PGHOST,
+      port: parseInt(process.env.PGPORT || '6543', 10),
+      database: process.env.PGDATABASE || 'postgres',
+      user: process.env.PGUSER,
+      password: process.env.PGPASSWORD,   // ← plain text, no URL encoding needed
+      ssl: { rejectUnauthorized: false }
+    }
+  : {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    };
+
+const pool = new Pool(poolConfig);
+
 
 const initializeDatabase = async () => {
   try {
