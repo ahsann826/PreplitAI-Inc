@@ -1,8 +1,18 @@
 const db = require('../db/database');
 
 /**
+ * Words-per-minute constant used to convert script word count to duration.
+ * This is the single source of truth — both the /calculate-cost quote endpoint
+ * and the /video/generate charging endpoint use this same value.
+ */
+const WORDS_PER_MINUTE = 130;
+
+/**
  * Credit Service
- * Handles all credit-related operations
+ * Handles all credit-related operations.
+ *
+ * Logging format: every credit/debit/refund/purchase emits a structured log line
+ * so support engineers can reconstruct account history without querying the DB.
  */
 class CreditService {
   /**
@@ -17,23 +27,41 @@ class CreditService {
   }
 
   /**
-   * Calculate cost for video generation
+   * Calculate credit cost for video generation.
+   *
+   * @param {object} options
+   * @param {number} options.wordCount     - Word count of the script (preferred)
+   * @param {number} [options.durationMinutes] - Fallback if wordCount not provided
+   * @param {string} [options.resolution]  - '1080p' or '720p'
+   * @param {boolean} [options.customMusic]
+   * @param {boolean} [options.premiumTTS]
+   * @param {boolean} [options.aiEnhancement]
    */
   calculateCost(options) {
     const {
-      durationMinutes = 1,
+      wordCount,
+      durationMinutes: rawDurationMinutes,
       resolution = '720p',
       customMusic = false,
       premiumTTS = false,
       aiEnhancement = false
     } = options;
 
-    const roundedMinutes = Math.ceil(durationMinutes);
-    let baseCost = resolution === '1080p' ? 8 : 5;
-    let videoCost = baseCost * roundedMinutes;
-    let musicCost = customMusic ? 2 : 0;
-    let ttsCost = premiumTTS ? 3 : 0;
-    let enhancementCost = aiEnhancement ? 4 : 0;
+    // Validate inputs
+    const durationMinutes = wordCount != null
+      ? wordCount / WORDS_PER_MINUTE
+      : rawDurationMinutes;
+
+    if (!durationMinutes || durationMinutes <= 0 || !isFinite(durationMinutes)) {
+      throw new Error('Invalid duration: must be a positive number');
+    }
+
+    const roundedMinutes = Math.max(1, Math.ceil(durationMinutes));
+    const baseCost = resolution === '1080p' ? 8 : 5;
+    const videoCost = baseCost * roundedMinutes;
+    const musicCost = customMusic ? 2 : 0;
+    const ttsCost = premiumTTS ? 3 : 0;
+    const enhancementCost = aiEnhancement ? 4 : 0;
 
     const totalCost = videoCost + musicCost + ttsCost + enhancementCost;
 
@@ -54,35 +82,56 @@ class CreditService {
   }
 
   /**
-   * Debit credits from user account
+   * Debit credits from user account.
+   * Uses SELECT FOR UPDATE to prevent double-spend under concurrent requests.
    */
   async debitCredits(userId, amount, description, videoGenerationId = null) {
     const client = await db.pool.connect();
     try {
       await client.query('BEGIN');
-      
-      const userResult = await client.query('SELECT credit_balance FROM users WHERE id = $1', [userId]);
+
+      // Lock the row to prevent concurrent over-drafts
+      const userResult = await client.query(
+        'SELECT credit_balance FROM users WHERE id = $1 FOR UPDATE',
+        [userId]
+      );
       if (userResult.rows.length === 0) throw new Error('User not found');
-      
+
       const user = userResult.rows[0];
       if (user.credit_balance < amount) throw new Error('Insufficient credits');
 
       const newBalance = user.credit_balance - amount;
 
-      await client.query('UPDATE users SET credit_balance = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [newBalance, userId]);
+      await client.query(
+        'UPDATE users SET credit_balance = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        [newBalance, userId]
+      );
 
       const result = await client.query(`
         INSERT INTO transactions (user_id, type, amount, balance_after, description, status)
         VALUES ($1, 'DEBIT', $2, $3, $4, 'COMPLETED') RETURNING id
       `, [userId, amount, newBalance, description]);
-      
+
       const transactionId = result.rows[0].id;
 
       if (videoGenerationId) {
-        await client.query('UPDATE video_generations SET transaction_id = $1 WHERE id = $2', [transactionId, videoGenerationId]);
+        await client.query(
+          'UPDATE video_generations SET transaction_id = $1 WHERE id = $2',
+          [transactionId, videoGenerationId]
+        );
       }
 
       await client.query('COMMIT');
+
+      console.log(JSON.stringify({
+        event: 'CREDIT_DEBIT',
+        userId,
+        amount,
+        balanceAfter: newBalance,
+        transactionId,
+        description
+      }));
+
       return { transactionId, amountDebited: amount, balanceAfter: newBalance };
     } catch (e) {
       await client.query('ROLLBACK');
@@ -93,19 +142,26 @@ class CreditService {
   }
 
   /**
-   * Credit credits to user account
+   * Credit credits to user account.
+   * Uses SELECT FOR UPDATE to prevent double-credit under concurrent requests.
    */
   async creditCredits(userId, amount, type, description, paymentId = null) {
     const client = await db.pool.connect();
     try {
       await client.query('BEGIN');
-      
-      const userResult = await client.query('SELECT credit_balance, total_credits_purchased FROM users WHERE id = $1', [userId]);
+
+      // Lock the row
+      const userResult = await client.query(
+        'SELECT credit_balance, total_credits_purchased FROM users WHERE id = $1 FOR UPDATE',
+        [userId]
+      );
       if (userResult.rows.length === 0) throw new Error('User not found');
-      
+
       const user = userResult.rows[0];
       const newBalance = user.credit_balance + amount;
-      const newTotalPurchased = type === 'PURCHASE' ? user.total_credits_purchased + amount : user.total_credits_purchased;
+      const newTotalPurchased = type === 'PURCHASE'
+        ? user.total_credits_purchased + amount
+        : user.total_credits_purchased;
 
       await client.query(`
         UPDATE users 
@@ -117,10 +173,21 @@ class CreditService {
         INSERT INTO transactions (user_id, type, amount, balance_after, description, payment_id, status)
         VALUES ($1, $2, $3, $4, $5, $6, 'COMPLETED') RETURNING id
       `, [userId, type, amount, newBalance, description, paymentId]);
-      
+
       const transactionId = result.rows[0].id;
-      
+
       await client.query('COMMIT');
+
+      console.log(JSON.stringify({
+        event: 'CREDIT_ADDED',
+        userId,
+        amount,
+        type,
+        balanceAfter: newBalance,
+        transactionId,
+        description
+      }));
+
       return { transactionId, amountCredited: amount, balanceAfter: newBalance };
     } catch (e) {
       await client.query('ROLLBACK');
@@ -137,14 +204,22 @@ class CreditService {
     const client = await db.pool.connect();
     try {
       await client.query('BEGIN');
-      
-      const videoGenResult = await client.query('SELECT credits_used, status FROM video_generations WHERE id = $1 AND user_id = $2', [videoGenerationId, userId]);
+
+      const videoGenResult = await client.query(
+        'SELECT credits_used, status FROM video_generations WHERE id = $1 AND user_id = $2',
+        [videoGenerationId, userId]
+      );
       if (videoGenResult.rows.length === 0) throw new Error('Video generation not found');
-      
+
       const videoGen = videoGenResult.rows[0];
       if (videoGen.status === 'REFUNDED') throw new Error('Credits already refunded');
 
-      const refund = await this.creditCredits(userId, videoGen.credits_used, 'REFUND', `Refund for failed video generation #${videoGenerationId}`);
+      const refund = await this.creditCredits(
+        userId,
+        videoGen.credits_used,
+        'REFUND',
+        `Refund for failed video generation #${videoGenerationId}`
+      );
 
       await client.query('UPDATE video_generations SET status = $1 WHERE id = $2', ['REFUNDED', videoGenerationId]);
 
@@ -177,15 +252,15 @@ class CreditService {
     params.push(limit, offset);
 
     const transactions = await db.query(query, params);
-    
+
     let countQuery = 'SELECT COUNT(*) as total FROM transactions WHERE user_id = $1';
     let countParams = [userId];
-    
+
     if (type) {
       countQuery += ' AND type = $2';
       countParams.push(type);
     }
-    
+
     const countResult = await db.query(countQuery, countParams);
     const total = parseInt(countResult.rows[0].total, 10);
 
@@ -267,3 +342,4 @@ class CreditService {
 }
 
 module.exports = new CreditService();
+module.exports.WORDS_PER_MINUTE = WORDS_PER_MINUTE;

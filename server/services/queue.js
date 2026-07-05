@@ -161,11 +161,35 @@ class QueueService extends EventEmitter {
       await this.updateJobStatus(job.id, 'failed', null, error.message);
       
       // Refund credits if this job was billed
-      if (data.transactionId && data.userId) {
+      // 1.5 FIX: Read the exact amount debited from the job payload.
+      // NEVER recompute the cost from scratch — the formula may have changed,
+      // and the recomputed amount will not match what was actually charged.
+      if (data.userId) {
         try {
-          const cost = creditService.calculateCost({ durationMinutes: data.script.length / 1000 }).total;
-          await creditService.creditCredits(data.userId, cost, 'REFUND', `Refund for failed video job ${job.id}`);
-          console.log(`[Queue] Refunded ${cost} credits to user ${data.userId}`);
+          let refundAmount = data.creditsDeducted;
+
+          if (refundAmount == null) {
+            // Fallback for old/malformed job rows — log loudly so support can investigate
+            console.error(JSON.stringify({
+              event: 'REFUND_AMOUNT_MISSING',
+              jobId: job.id,
+              userId: data.userId,
+              message: 'data.creditsDeducted is missing on this job row — cannot compute exact refund. Skipping refund to avoid over/under-crediting. Manual review required.',
+            }));
+          } else {
+            await creditService.creditCredits(
+              data.userId,
+              refundAmount,
+              'REFUND',
+              `Refund for failed video job ${job.id}`
+            );
+            console.log(JSON.stringify({
+              event: 'REFUND_ISSUED',
+              jobId: job.id,
+              userId: data.userId,
+              refundAmount
+            }));
+          }
         } catch (refundErr) {
           console.error('[Queue] Failed to process refund:', refundErr);
         }

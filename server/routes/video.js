@@ -4,67 +4,106 @@ const queueService = require('../services/queue');
 const creditService = require('../services/creditService');
 const authMiddleware = require('../middleware/auth');
 
-// Generate video by enqueueing a background job
+// ── POST /api/video/generate ──────────────────────────────────────────────────
+// Deducts credits and enqueues a video generation job.
+// The debit is committed to the DB BEFORE the job is enqueued, so a failed
+// debit never results in a queued job. The exact amount debited is stored
+// in the job payload so the queue's refund path can refund exactly what was charged.
 router.post('/generate', authMiddleware, async (req, res) => {
   try {
     const { script, options } = req.body;
-    
+
     if (!script) {
       return res.status(400).json({ error: 'Script is required' });
     }
 
-    // Calculate cost: 1 credit per 1000 characters
-    const estimatedMinutes = Math.max(1, Math.ceil(script.length / 1000));
+    // ── 1.4 FIX: Duration from word count, not character count ────────────────
+    // Use the same WORDS_PER_MINUTE constant as creditService so the quote
+    // endpoint (/api/credits/calculate-cost) and this charging path always agree.
+    const wordCount = script.trim().split(/\s+/).filter(Boolean).length;
+
+    // ── 1.4 FIX: Read real options from the request body ──────────────────────
+    // Do NOT hardcode premiumTTS or drop other flags on the floor.
+    const resolution = options?.ratio === '16:9' ? '1080p' : (options?.resolution || '720p');
+    const premiumTTS = options?.premiumTTS === true;
+    const customMusic = options?.customMusic === true;
+    const aiEnhancement = options?.aiEnhancement === true;
+
     const costDetails = creditService.calculateCost({
-      durationMinutes: estimatedMinutes,
-      resolution: options?.ratio === '16:9' ? '1080p' : '720p',
-      premiumTTS: true
+      wordCount,
+      resolution,
+      premiumTTS,
+      customMusic,
+      aiEnhancement
     });
 
     const requiredCredits = costDetails.total;
     const userId = req.userId;
 
-    // Check credits
-    if (!creditService.hasEnoughCredits(userId, requiredCredits)) {
-      return res.status(402).json({ 
+    // ── 1.1 FIX: await the async credit check ────────────────────────────────
+    const hasCredits = await creditService.hasEnoughCredits(userId, requiredCredits);
+    if (!hasCredits) {
+      const currentBalance = await creditService.getUserBalance(userId);
+      return res.status(402).json({
         error: 'Insufficient credits',
         required: requiredCredits,
-        current: creditService.getUserBalance(userId)
+        current: currentBalance,
+        costBreakdown: costDetails.breakdown
       });
     }
 
-    // Deduct credits
-    const transaction = creditService.debitCredits(
-      userId, 
-      requiredCredits, 
-      'Video Generation via D-ID'
-    );
+    // ── 1.2 FIX: await the debit and only enqueue AFTER the debit commits ─────
+    let debitResult;
+    try {
+      debitResult = await creditService.debitCredits(
+        userId,
+        requiredCredits,
+        `Video Generation (${costDetails.durationMinutes} min, ${resolution})`
+      );
+    } catch (debitError) {
+      // Debit failed (e.g. race condition caught by FOR UPDATE) — do NOT enqueue
+      if (debitError.message === 'Insufficient credits') {
+        const currentBalance = await creditService.getUserBalance(userId);
+        return res.status(402).json({
+          error: 'Insufficient credits',
+          required: requiredCredits,
+          current: currentBalance
+        });
+      }
+      throw debitError;
+    }
 
-    // Add job to the SQLite queue with transaction details for potential refund
-    const jobId = queueService.addJob('generate_video', { 
-      script, 
-      options: options || {},
+    // ── 1.5 FIX: store the exact amount debited in the job payload ────────────
+    // The queue's refund path reads data.creditsDeducted and refunds exactly that —
+    // it must never recompute the cost, which could drift from what was charged.
+    const jobId = await queueService.addJob('generate_video', {
+      script,
+      options: { ...options, resolution, premiumTTS, customMusic, aiEnhancement },
       userId,
-      transactionId: transaction.transactionId
+      transactionId: debitResult.transactionId,
+      creditsDeducted: debitResult.amountDebited   // ← single source of truth for refund
     });
-    
+
     res.json({
       success: true,
       message: 'Video generation queued successfully',
       jobId,
-      creditsDeducted: requiredCredits
+      creditsDeducted: requiredCredits,
+      costBreakdown: costDetails.breakdown,
+      balanceAfter: debitResult.balanceAfter
     });
   } catch (error) {
     console.error('Error queuing video generation:', error);
-    res.status(500).json({ error: 'Failed to start video generation' });
+    res.status(500).json({ error: 'Failed to start video generation', message: error.message });
   }
 });
 
+// ── GET /api/video/status/:jobId ──────────────────────────────────────────────
 // Check status of a video generation job via Server-Sent Events (SSE)
-router.get('/status/:jobId', authMiddleware, (req, res) => {
+router.get('/status/:jobId', authMiddleware, async (req, res) => {
   const { jobId } = req.params;
-  const initialJob = queueService.getJob(jobId);
-  
+  const initialJob = await queueService.getJob(jobId);
+
   if (!initialJob) {
     return res.status(404).json({ error: 'Job not found' });
   }
@@ -76,25 +115,21 @@ router.get('/status/:jobId', authMiddleware, (req, res) => {
     'Connection': 'keep-alive'
   });
 
-  // Helper to send events
   const sendEvent = (data) => {
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   };
 
-  // Send initial state
   sendEvent({
     status: initialJob.status,
     videoUrl: initialJob.result?.videoUrl || null,
     error: initialJob.error
   });
 
-  // If already done, close connection
   if (initialJob.status === 'completed' || initialJob.status === 'failed') {
     res.end();
     return;
   }
 
-  // Listen for updates from the QueueService
   const onJobUpdate = (update) => {
     if (update.jobId === jobId) {
       sendEvent({
@@ -102,7 +137,7 @@ router.get('/status/:jobId', authMiddleware, (req, res) => {
         videoUrl: update.result?.videoUrl || null,
         error: update.error
       });
-      
+
       if (update.status === 'completed' || update.status === 'failed') {
         cleanup();
         res.end();
@@ -112,16 +147,28 @@ router.get('/status/:jobId', authMiddleware, (req, res) => {
 
   queueService.on('job_updated', onJobUpdate);
 
-  // Cleanup on client disconnect
   const cleanup = () => {
     queueService.removeListener('job_updated', onJobUpdate);
   };
   req.on('close', cleanup);
 });
 
-// Get video history (stub)
-router.get('/history', authMiddleware, (req, res) => {
-  res.json({ success: true, videos: [] });
+// ── 1.8 FIX: Remove dead /history stub. ──────────────────────────────────────
+// The frontend's api.ts calls /api/video/history but that was returning a
+// hardcoded empty array. Redirect to the real implementation at
+// /api/credits/video-history which calls creditService.getVideoHistory().
+router.get('/history', authMiddleware, async (req, res) => {
+  try {
+    const { limit = 50, offset = 0 } = req.query;
+    const result = await creditService.getVideoHistory(req.userId, {
+      limit: parseInt(limit),
+      offset: parseInt(offset)
+    });
+    res.json({ success: true, ...result });
+  } catch (error) {
+    console.error('Error fetching video history:', error);
+    res.status(500).json({ error: 'Failed to fetch video history', message: error.message });
+  }
 });
 
 module.exports = router;

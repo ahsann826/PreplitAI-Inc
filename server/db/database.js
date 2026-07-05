@@ -1,7 +1,15 @@
 const { Pool } = require('pg');
 
+// ── Startup Validation ────────────────────────────────────────────────────────
+// Fail fast if DATABASE_URL is missing — never fall back to a hardcoded value.
+if (!process.env.DATABASE_URL) {
+  console.error('FATAL: DATABASE_URL environment variable is not set.');
+  console.error('Set DATABASE_URL to your Supabase connection pooler URL and restart.');
+  process.exit(1);
+}
+
 const pool = new Pool({
-  connectionString: "postgresql://postgres.argiroqmigyudozmjocd:Swaggyswaggy123%23@aws-1-ap-southeast-2.pooler.supabase.com:6543/postgres",
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
@@ -62,6 +70,7 @@ const initializeDatabase = async () => {
         currency VARCHAR(10) DEFAULT 'usd',
         payment_method VARCHAR(50) DEFAULT 'STRIPE',
         payment_intent_id VARCHAR(255) UNIQUE,
+        stripe_event_id VARCHAR(255),
         status VARCHAR(50) DEFAULT 'PENDING',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         completed_at TIMESTAMP
@@ -109,6 +118,11 @@ const initializeDatabase = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    // Add stripe_event_id column if it doesn't exist (for idempotency)
+    await pool.query(`
+      ALTER TABLE payments ADD COLUMN IF NOT EXISTS stripe_event_id VARCHAR(255)
     `);
 
     console.log('Database initialized successfully');

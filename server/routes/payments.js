@@ -5,7 +5,6 @@ const authMiddleware = require('../middleware/auth');
 
 /**
  * POST /api/payments/create-intent
- * Create a Stripe payment intent for purchasing credits
  */
 router.post('/create-intent', authMiddleware, async (req, res) => {
   try {
@@ -20,10 +19,7 @@ router.post('/create-intent', authMiddleware, async (req, res) => {
 
     const result = await paymentService.createPaymentIntent(req.userId, packageId);
 
-    res.json({
-      success: true,
-      ...result
-    });
+    res.json({ success: true, ...result });
   } catch (error) {
     console.error('Error creating payment intent:', error);
     res.status(500).json({
@@ -35,8 +31,12 @@ router.post('/create-intent', authMiddleware, async (req, res) => {
 
 /**
  * POST /api/payments/confirm
- * Confirm payment after successful Stripe payment
- * (Alternative to webhook for immediate confirmation)
+ * Confirm payment after successful Stripe payment.
+ *
+ * 1.3 FIX: This endpoint now calls stripe.paymentIntents.retrieve() internally
+ * and will only credit the account if Stripe confirms the payment succeeded.
+ * Clients can use this for faster UI feedback, but credits are never issued
+ * based on the client's word alone.
  */
 router.post('/confirm', authMiddleware, async (req, res) => {
   try {
@@ -59,6 +59,14 @@ router.post('/confirm', authMiddleware, async (req, res) => {
       });
     }
 
+    if (!result.verified) {
+      return res.status(402).json({
+        success: false,
+        message: result.message,
+        stripeStatus: result.stripeStatus
+      });
+    }
+
     res.json({
       success: true,
       message: 'Payment confirmed successfully',
@@ -75,53 +83,39 @@ router.post('/confirm', authMiddleware, async (req, res) => {
 
 /**
  * POST /api/payments/webhook
- * Stripe webhook endpoint
- * This must be called with raw body, not JSON parsed
+ * Stripe webhook endpoint — must receive raw body for signature verification
  */
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const signature = req.headers['stripe-signature'];
 
   if (!signature) {
-    return res.status(400).json({
-      error: 'Missing signature',
-      message: 'Stripe signature is required'
-    });
+    return res.status(400).json({ error: 'Missing Stripe signature' });
   }
 
   try {
-    // Construct and verify webhook event
     const event = paymentService.constructWebhookEvent(req.body, signature);
-
-    // Handle the event
     await paymentService.handleWebhook(event);
-
     res.json({ received: true });
   } catch (error) {
     console.error('Webhook error:', error);
-    res.status(400).json({
-      error: 'Webhook error',
-      message: error.message
-    });
+    res.status(400).json({ error: 'Webhook error', message: error.message });
   }
 });
 
 /**
  * GET /api/payments/history
- * Get user's payment history
+ * 1.6b FIX: was missing await — returned a serialized Promise, not the data
  */
 router.get('/history', authMiddleware, async (req, res) => {
   try {
     const { limit = 50, offset = 0 } = req.query;
 
-    const result = paymentService.getPaymentHistory(req.userId, {
+    const result = await paymentService.getPaymentHistory(req.userId, {
       limit: parseInt(limit),
       offset: parseInt(offset)
     });
 
-    res.json({
-      success: true,
-      ...result
-    });
+    res.json({ success: true, ...result });
   } catch (error) {
     console.error('Error fetching payment history:', error);
     res.status(500).json({
@@ -133,13 +127,13 @@ router.get('/history', authMiddleware, async (req, res) => {
 
 /**
  * GET /api/payments/:paymentId
- * Get payment details by ID
+ * 1.6b FIX: was missing await
  */
 router.get('/:paymentId', authMiddleware, async (req, res) => {
   try {
     const { paymentId } = req.params;
 
-    const payment = paymentService.getPaymentById(parseInt(paymentId), req.userId);
+    const payment = await paymentService.getPaymentById(parseInt(paymentId), req.userId);
 
     if (!payment) {
       return res.status(404).json({
@@ -148,10 +142,7 @@ router.get('/:paymentId', authMiddleware, async (req, res) => {
       });
     }
 
-    res.json({
-      success: true,
-      payment
-    });
+    res.json({ success: true, payment });
   } catch (error) {
     console.error('Error fetching payment:', error);
     res.status(500).json({

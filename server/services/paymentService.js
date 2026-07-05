@@ -14,7 +14,7 @@ try {
 
 /**
  * Payment Service
- * Handles Stripe payments and credit purchases
+ * Handles Stripe payments and credit purchases.
  */
 class PaymentService {
   /**
@@ -25,20 +25,13 @@ class PaymentService {
       throw new Error('Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.');
     }
 
-    // Get package details
     const pkg = await creditService.getPackageById(packageId);
-    if (!pkg) {
-      throw new Error('Invalid package');
-    }
+    if (!pkg) throw new Error('Invalid package');
 
-    // Get user details
     const userResult = await db.query('SELECT email, name FROM users WHERE id = $1', [userId]);
-    if (userResult.rows.length === 0) {
-      throw new Error('User not found');
-    }
+    if (userResult.rows.length === 0) throw new Error('User not found');
     const user = userResult.rows[0];
 
-    // Create payment record
     const paymentResult = await db.query(`
       INSERT INTO payments (user_id, package_id, amount, currency, payment_method, status)
       VALUES ($1, $2, $3, 'usd', 'STRIPE', 'PENDING') RETURNING id
@@ -47,9 +40,8 @@ class PaymentService {
     const paymentId = paymentResult.rows[0].id;
 
     try {
-      // Create Stripe payment intent
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(pkg.price * 100), // Convert to cents
+        amount: Math.round(pkg.price * 100),
         currency: 'usd',
         metadata: {
           userId: userId.toString(),
@@ -62,7 +54,6 @@ class PaymentService {
         receipt_email: user.email
       });
 
-      // Update payment record with payment intent ID
       await db.query('UPDATE payments SET payment_intent_id = $1 WHERE id = $2', [paymentIntent.id, paymentId]);
 
       return {
@@ -74,29 +65,57 @@ class PaymentService {
         totalCredits: pkg.credits + pkg.bonus_credits
       };
     } catch (error) {
-      // Mark payment as failed
       await db.query('UPDATE payments SET status = $1 WHERE id = $2', ['FAILED', paymentId]);
       throw error;
     }
   }
 
   /**
-   * Confirm payment and credit user account
+   * Confirm payment and credit user account.
+   *
+   * 1.3 FIX: This method now verifies the PaymentIntent status directly with
+   * Stripe before crediting any account. Client-supplied data is never trusted.
+   * It also uses SELECT FOR UPDATE on the payments row so a webhook delivery
+   * and a /confirm call racing each other cannot both credit the same payment.
    */
   async confirmPayment(paymentIntentId) {
+    if (!stripe) {
+      throw new Error('Stripe is not configured.');
+    }
+
+    // ── Step 1: Verify with Stripe that the payment actually succeeded ────────
+    let stripePaymentIntent;
+    try {
+      stripePaymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    } catch (err) {
+      throw new Error(`Could not retrieve PaymentIntent from Stripe: ${err.message}`);
+    }
+
+    if (stripePaymentIntent.status !== 'succeeded') {
+      return {
+        success: false,
+        verified: false,
+        stripeStatus: stripePaymentIntent.status,
+        message: `Payment has not succeeded. Current Stripe status: ${stripePaymentIntent.status}`
+      };
+    }
+
+    // ── Step 2: Atomically claim the payment row ──────────────────────────────
     const client = await db.pool.connect();
     try {
       await client.query('BEGIN');
-      
+
+      // Lock the payments row so concurrent calls cannot both credit
       const paymentResult = await client.query(`
         SELECT p.*, cp.credits, cp.bonus_credits, cp.name as package_name
         FROM payments p
         JOIN credit_packages cp ON p.package_id = cp.id
         WHERE p.payment_intent_id = $1
+        FOR UPDATE
       `, [paymentIntentId]);
 
       if (paymentResult.rows.length === 0) throw new Error('Payment not found');
-      
+
       const payment = paymentResult.rows[0];
 
       if (payment.status === 'COMPLETED') {
@@ -114,13 +133,25 @@ class PaymentService {
         payment.id
       );
 
-      await client.query('UPDATE payments SET status = $1, completed_at = CURRENT_TIMESTAMP, transaction_id = $2 WHERE id = $3', 
+      await client.query(
+        'UPDATE payments SET status = $1, completed_at = CURRENT_TIMESTAMP, transaction_id = $2 WHERE id = $3',
         ['COMPLETED', transaction.transactionId, payment.id]
       );
 
       await client.query('COMMIT');
+
+      console.log(JSON.stringify({
+        event: 'PAYMENT_CONFIRMED',
+        userId: payment.user_id,
+        paymentId: payment.id,
+        paymentIntentId,
+        creditsGranted: totalCredits,
+        transactionId: transaction.transactionId
+      }));
+
       return {
         success: true,
+        verified: true,
         payment: { ...payment, status: 'COMPLETED' },
         transaction,
         totalCredits
@@ -134,14 +165,16 @@ class PaymentService {
   }
 
   /**
-   * Handle Stripe webhook events
+   * Handle Stripe webhook events.
+   * Uses the Stripe event ID for idempotency — a webhook replayed twice
+   * will credit the account only once.
    */
   async handleWebhook(event) {
-    console.log('📨 Webhook received:', event.type);
+    console.log(JSON.stringify({ event: 'WEBHOOK_RECEIVED', type: event.type, id: event.id }));
 
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await this.handlePaymentSuccess(event.data.object);
+        await this.handlePaymentSuccess(event.data.object, event.id);
         break;
       case 'payment_intent.payment_failed':
         await this.handlePaymentFailure(event.data.object);
@@ -156,21 +189,49 @@ class PaymentService {
     return { received: true };
   }
 
-  async handlePaymentSuccess(paymentIntent) {
+  async handlePaymentSuccess(paymentIntent, stripeEventId) {
+    const client = await db.pool.connect();
     try {
+      await client.query('BEGIN');
+
+      // Idempotency guard: if this Stripe event has already been processed, skip
+      if (stripeEventId) {
+        const existing = await client.query(
+          'SELECT id FROM payments WHERE stripe_event_id = $1',
+          [stripeEventId]
+        );
+        if (existing.rows.length > 0) {
+          await client.query('ROLLBACK');
+          console.log(JSON.stringify({ event: 'WEBHOOK_DUPLICATE_SKIPPED', stripeEventId }));
+          return { alreadyProcessed: true };
+        }
+      }
+
+      // Mark the event ID before crediting to prevent race conditions
+      await client.query(
+        'UPDATE payments SET stripe_event_id = $1 WHERE payment_intent_id = $2 AND stripe_event_id IS NULL',
+        [stripeEventId, paymentIntent.id]
+      );
+
+      await client.query('COMMIT');
+
+      // Now do the actual credit (it has its own transaction with FOR UPDATE)
       const result = await this.confirmPayment(paymentIntent.id);
-      console.log('✅ Payment confirmed:', paymentIntent.id);
+      console.log(JSON.stringify({ event: 'PAYMENT_SUCCESS_WEBHOOK', paymentIntentId: paymentIntent.id }));
       return result;
     } catch (error) {
-      console.error('❌ Error confirming payment:', error);
+      await client.query('ROLLBACK');
+      console.error('❌ Error in handlePaymentSuccess:', error);
       throw error;
+    } finally {
+      client.release();
     }
   }
 
   async handlePaymentFailure(paymentIntent) {
     try {
       await db.query('UPDATE payments SET status = $1 WHERE payment_intent_id = $2', ['FAILED', paymentIntent.id]);
-      console.log('❌ Payment failed:', paymentIntent.id);
+      console.log(JSON.stringify({ event: 'PAYMENT_FAILED', paymentIntentId: paymentIntent.id }));
     } catch (error) {
       console.error('Error handling payment failure:', error);
     }
@@ -178,40 +239,41 @@ class PaymentService {
 
   async handleRefund(charge) {
     try {
-      const paymentIntent = charge.payment_intent;
-      
-      const paymentResult = await db.query('SELECT * FROM payments WHERE payment_intent_id = $1', [paymentIntent]);
+      const paymentIntentId = charge.payment_intent;
+
+      const paymentResult = await db.query('SELECT * FROM payments WHERE payment_intent_id = $1', [paymentIntentId]);
       if (paymentResult.rows.length === 0) {
-        console.log('Payment not found or not completed, skipping refund');
+        console.log('Payment not found for refund, skipping');
         return;
       }
       const payment = paymentResult.rows[0];
-      
+
       if (payment.status !== 'COMPLETED') {
-        console.log('Payment not found or not completed, skipping refund');
+        console.log('Payment not completed, skipping refund');
         return;
       }
 
       const client = await db.pool.connect();
       try {
         await client.query('BEGIN');
-        
+
         await client.query('UPDATE payments SET status = $1 WHERE id = $2', ['REFUNDED', payment.id]);
-        
+
         const transactionResult = await client.query('SELECT * FROM transactions WHERE payment_id = $1', [payment.id]);
-        
+
         if (transactionResult.rows.length > 0) {
           const pkg = await creditService.getPackageById(payment.package_id);
           const totalCredits = pkg.credits + pkg.bonus_credits;
-          
+
           await creditService.debitCredits(
             payment.user_id,
             totalCredits,
-            `Refund for payment #${payment.id}`
+            `Refund processed for payment #${payment.id}`
           );
         }
+
         await client.query('COMMIT');
-        console.log('💰 Refund processed:', paymentIntent);
+        console.log(JSON.stringify({ event: 'REFUND_PROCESSED', paymentId: payment.id, paymentIntentId }));
       } catch (e) {
         await client.query('ROLLBACK');
         throw e;

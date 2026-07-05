@@ -12,7 +12,8 @@ router.use(authMiddleware);
  */
 router.get('/balance', async (req, res) => {
   try {
-    const balance = creditService.getUserBalance(req.userId);
+    // 1.6 FIX: was missing await — returned a Promise, not the balance value
+    const balance = await creditService.getUserBalance(req.userId);
     res.json({
       success: true,
       balance,
@@ -33,7 +34,8 @@ router.get('/balance', async (req, res) => {
  */
 router.get('/packages', async (req, res) => {
   try {
-    const packages = creditService.getActivePackages();
+    // 1.6 FIX: was missing await
+    const packages = await creditService.getActivePackages();
     res.json({
       success: true,
       packages: packages.map(pkg => ({
@@ -59,7 +61,8 @@ router.get('/transactions', async (req, res) => {
   try {
     const { limit = 50, offset = 0, type } = req.query;
 
-    const result = creditService.getTransactionHistory(req.userId, {
+    // 1.6 FIX: was missing await
+    const result = await creditService.getTransactionHistory(req.userId, {
       limit: parseInt(limit),
       offset: parseInt(offset),
       type: type || null
@@ -80,28 +83,33 @@ router.get('/transactions', async (req, res) => {
 
 /**
  * POST /api/credits/calculate-cost
- * Calculate credit cost for video generation
+ * Calculate credit cost for video generation.
+ * Uses the same calculateCost() function as /api/video/generate so quotes
+ * and actual charges are always identical.
  */
 router.post('/calculate-cost', async (req, res) => {
   try {
-    const { durationMinutes, resolution, customMusic, premiumTTS, aiEnhancement } = req.body;
+    const { wordCount, durationMinutes, resolution, customMusic, premiumTTS, aiEnhancement } = req.body;
 
-    if (!durationMinutes || durationMinutes <= 0) {
+    // Accept either wordCount (preferred) or durationMinutes for backwards compat
+    if (!wordCount && !durationMinutes) {
       return res.status(400).json({
-        error: 'Invalid duration',
-        message: 'Duration must be greater than 0'
+        error: 'Invalid input',
+        message: 'Either wordCount or durationMinutes must be provided'
       });
     }
 
     const costBreakdown = creditService.calculateCost({
-      durationMinutes,
+      wordCount: wordCount || null,
+      durationMinutes: durationMinutes || null,
       resolution: resolution || '720p',
       customMusic: customMusic || false,
       premiumTTS: premiumTTS || false,
       aiEnhancement: aiEnhancement || false
     });
 
-    const userBalance = creditService.getUserBalance(req.userId);
+    // 1.6 FIX: was missing await — returned a Promise object, not the balance
+    const userBalance = await creditService.getUserBalance(req.userId);
     const canAfford = userBalance >= costBreakdown.total;
 
     res.json({
@@ -128,7 +136,8 @@ router.get('/video-history', async (req, res) => {
   try {
     const { limit = 50, offset = 0 } = req.query;
 
-    const result = creditService.getVideoHistory(req.userId, {
+    // 1.6 FIX: was missing await
+    const result = await creditService.getVideoHistory(req.userId, {
       limit: parseInt(limit),
       offset: parseInt(offset)
     });
