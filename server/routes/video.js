@@ -3,13 +3,12 @@ const router = express.Router();
 const queueService = require('../services/queue');
 const creditService = require('../services/creditService');
 const authMiddleware = require('../middleware/auth');
+const { rateLimitMiddleware } = require('../middleware/rateLimit');
 
 // ── POST /api/video/generate ──────────────────────────────────────────────────
 // Deducts credits and enqueues a video generation job.
-// The debit is committed to the DB BEFORE the job is enqueued, so a failed
-// debit never results in a queued job. The exact amount debited is stored
-// in the job payload so the queue's refund path can refund exactly what was charged.
-router.post('/generate', authMiddleware, async (req, res) => {
+// Rate limiter is applied after auth (keyed by userId) to prevent API abuse.
+router.post('/generate', authMiddleware, rateLimitMiddleware, async (req, res) => {
   try {
     const { script, options } = req.body;
 

@@ -4,15 +4,19 @@ const path = require('path');
 const fs = require('fs').promises;
 const documentParser = require('../services/documentParser');
 const scriptGenerator = require('../services/scriptGenerator');
+const authMiddleware = require('../middleware/auth');
+const { rateLimitMiddleware } = require('../middleware/rateLimit');
 
-// Generate lecture from uploaded document
-router.post('/generate', async (req, res) => {
+// BUG-006 FIX: /generate now requires authentication.
+// Phase 2: rate limiter applied after auth so we can key by userId.
+// This prevents a single authenticated user from hammering paid Groq API calls.
+router.post('/generate', authMiddleware, rateLimitMiddleware, async (req, res) => {
   try {
     const { documentId, mode, style } = req.body;
 
     // Validate inputs
     if (!documentId || !mode || !style) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing required fields',
         required: ['documentId', 'mode', 'style']
       });
@@ -22,32 +26,25 @@ router.post('/generate', async (req, res) => {
     const validStyles = ['professor', 'visual'];
 
     if (!validModes.includes(mode)) {
-      return res.status(400).json({ 
-        error: 'Invalid mode',
-        validModes 
-      });
+      return res.status(400).json({ error: 'Invalid mode', validModes });
     }
 
     if (!validStyles.includes(style)) {
-      return res.status(400).json({ 
-        error: 'Invalid style',
-        validStyles 
-      });
+      return res.status(400).json({ error: 'Invalid style', validStyles });
     }
 
     // Get the document file
     const filePath = path.join(__dirname, '../uploads', documentId);
-    
+
     try {
       await fs.access(filePath);
     } catch {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: 'Document not found',
         message: 'The uploaded document could not be found. Please upload again.'
       });
     }
 
-    // Get file info to determine mime type
     const ext = path.extname(documentId).toLowerCase();
     const mimeTypes = {
       '.pdf': 'application/pdf',
@@ -64,9 +61,6 @@ router.post('/generate', async (req, res) => {
     // Generate script
     console.log('Generating lecture script...');
     const script = await scriptGenerator.generateScript(text, mode, style);
-
-    // Scene breakdown is now replaced by structured scenes
-    const sceneBreakdown = null;
 
     // Generate structured scenes
     console.log('Generating structured scenes...');
@@ -86,26 +80,26 @@ router.post('/generate', async (req, res) => {
         mode,
         style,
         script,
-        sceneBreakdown,
+        sceneBreakdown: null,
         scenes,
         wordCount: script.split(' ').length,
-        estimatedDuration: Math.ceil(script.split(' ').length / 150) // ~150 words per minute
+        estimatedDuration: Math.ceil(script.split(' ').length / 150)
       },
       message: 'Lecture script generated successfully',
       warning,
-      next: 'Video generation will be added in the next phase'
+      next: 'Submit the script to /api/video/generate to produce a video'
     });
 
   } catch (error) {
     console.error('Lecture generation error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to generate lecture',
-      message: error.message 
+      message: error.message
     });
   }
 });
 
-// Get lecture status (placeholder for future video generation tracking)
+// Get lecture status
 router.get('/status/:lectureId', async (req, res) => {
   res.json({
     message: 'Video generation tracking coming soon',

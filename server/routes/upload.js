@@ -4,6 +4,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs').promises;
 const documentParser = require('../services/documentParser');
+const authMiddleware = require('../middleware/auth');
+const db = require('../db/database');
 
 // Configure multer for file upload
 const storage = multer.diskStorage({
@@ -29,7 +31,7 @@ const fileFilter = (req, file, cb) => {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'text/plain'
   ];
-  
+
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
@@ -45,8 +47,10 @@ const upload = multer({
   }
 });
 
-// Upload and parse document
-router.post('/', upload.single('file'), async (req, res) => {
+// BUG-005 FIX: Upload now requires authentication.
+// After a successful upload the document is recorded in user_uploads
+// so uploads are always tied to an authenticated user.
+router.post('/', authMiddleware, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -54,17 +58,18 @@ router.post('/', upload.single('file'), async (req, res) => {
 
     console.log('File uploaded:', req.file.filename);
 
-    // Resolve the stored path explicitly to avoid env-specific path issues
     const storedPath = path.join(__dirname, '../uploads', req.file.filename);
     console.log('Stored path:', storedPath, 'mimetype:', req.file.mimetype, 'originalname:', req.file.originalname);
 
     // Parse the document
-    const text = await documentParser.parseDocument(
-      storedPath,
-      req.file.mimetype
+    const text = await documentParser.parseDocument(storedPath, req.file.mimetype);
+
+    // BUG-005 FIX: Record this upload in user_uploads tied to the authenticated user
+    await db.query(
+      'INSERT INTO user_uploads (user_id, document_id, file_name) VALUES ($1, $2, $3)',
+      [req.userId, req.file.filename, req.file.originalname]
     );
 
-    // Return success with document ID and preview
     res.json({
       success: true,
       documentId: req.file.filename,
@@ -76,7 +81,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
   } catch (error) {
     console.error('Upload error:', error);
-    
+
     // Clean up file if parsing failed
     if (req.file) {
       try {
@@ -86,16 +91,16 @@ router.post('/', upload.single('file'), async (req, res) => {
         console.error('Failed to delete file:', unlinkError);
       }
     }
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: 'Failed to process document',
-      message: error.message 
+      message: error.message
     });
   }
 });
 
-// Upload raw text notes
-router.post('/text', async (req, res) => {
+// BUG-005 FIX: Raw text upload also requires authentication
+router.post('/text', authMiddleware, async (req, res) => {
   try {
     const { text, title } = req.body;
     if (!text || !text.trim()) {
@@ -105,11 +110,16 @@ router.post('/text', async (req, res) => {
     const filename = (title || 'notes').replace(/[^a-zA-Z0-9]/g, '_') + '-' + Date.now() + '-' + Math.round(Math.random() * 1E9) + '.txt';
     const uploadDir = path.join(__dirname, '../uploads');
     await fs.mkdir(uploadDir, { recursive: true });
-    
+
     const storedPath = path.join(uploadDir, filename);
     await fs.writeFile(storedPath, text, 'utf-8');
 
-    // Parse the document text for word count and details
+    // Record in user_uploads
+    await db.query(
+      'INSERT INTO user_uploads (user_id, document_id, file_name) VALUES ($1, $2, $3)',
+      [req.userId, filename, title || 'pasted-notes.txt']
+    );
+
     res.json({
       success: true,
       documentId: filename,
