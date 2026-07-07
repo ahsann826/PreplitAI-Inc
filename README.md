@@ -8,7 +8,6 @@
 
 
 ![Status](https://img.shields.io/badge/status-pre--launch-8b0000?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-darkred?style=flat-square)
 ![License](https://img.shields.io/badge/license-Apache%202.0-8b0000?style=flat-square)
 ![Waitlist](https://img.shields.io/badge/join-waitlist-8b0000?style=flat-square)
 ![Powered by AI](https://img.shields.io/badge/powered%20by-AI-darkred?style=flat-square)
